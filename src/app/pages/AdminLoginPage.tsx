@@ -22,30 +22,13 @@ import {
   sendAdminOTP, 
   verifyAdminOTP, 
   resetAdminPassword, 
-  isSupabaseConfigured 
+  isSupabaseConfigured,
+  getAdminAuth,
+  setAdminAuth
 } from '../lib/supabase';
 
 const ADMIN_USERNAME = 'admin2233';
 const ADMIN_PASSWORD = 'admin@2233';
-const AUTH_STORAGE_KEY = 'ashapura_admin_auth';
-
-export function getAdminAuth(): boolean {
-  try {
-    return localStorage.getItem(AUTH_STORAGE_KEY) === 'true';
-  } catch {
-    return false;
-  }
-}
-
-export function setAdminAuth(value: boolean) {
-  try {
-    if (value) {
-      localStorage.setItem(AUTH_STORAGE_KEY, 'true');
-    } else {
-      localStorage.removeItem(AUTH_STORAGE_KEY);
-    }
-  } catch {}
-}
 
 interface AdminLoginPageProps {
   onLoginSuccess: () => void;

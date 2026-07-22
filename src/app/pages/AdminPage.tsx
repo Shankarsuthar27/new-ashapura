@@ -26,8 +26,8 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AdminLoginPage, getAdminAuth, setAdminAuth } from './AdminLoginPage';
-import { uploadProductImage } from '../lib/supabase';
+import { AdminLoginPage } from './AdminLoginPage';
+import { uploadProductImage, getAdminAuth, setAdminAuth } from '../lib/supabase';
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
