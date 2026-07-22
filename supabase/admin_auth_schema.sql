@@ -21,7 +21,7 @@ INSERT INTO admin_users (username, password_hash, phone, email)
 VALUES (
   'admin2233',
   crypt('admin@2233', gen_salt('bf')),
-  '9974617657',
+  '9664471637',
   'ashapura.owner@gmail.com'
 )
 ON CONFLICT (username) DO NOTHING;

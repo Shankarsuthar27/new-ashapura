@@ -191,7 +191,7 @@ serve(async (req: Request) => {
       let smsSent = false;
       let gatewayMessage = '';
 
-      const targetPhone = user.phone || '9974617657';
+      const targetPhone = user.phone || '9664471637';
 
       // 1. Fast2SMS Integration
       if (FAST2SMS_API_KEY) {

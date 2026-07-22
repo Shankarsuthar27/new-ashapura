@@ -465,7 +465,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
                 </div>
 
                 <p className="text-gray-400 text-xs mb-5 leading-relaxed text-left">
-                  Enter your registered administrator username or email address. We will send a secure 6-digit OTP code to the system owner's phone number (**9974617657**).
+                  Enter your registered administrator username or email address. We will send a secure 6-digit OTP code to the system owner's phone number (**9664471637**).
                 </p>
 
                 <form onSubmit={handleRequestOtp} className="space-y-5">
