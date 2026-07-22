@@ -275,14 +275,15 @@ async function callAdminAuth(action: string, payload: any) {
   const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL || `${url}/functions/v1`;
   const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-  const res = await fetch(`${functionsUrl}/admin-auth/${action}`, {
+  // Call the root function URL directly and pass the action in the payload to bypass API gateway subrouting
+  const res = await fetch(`${functionsUrl}/admin-auth`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${anonKey}`,
       'apikey': anonKey,
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify({ action, ...payload }),
   });
 
   const data = await res.json().catch(() => ({}));

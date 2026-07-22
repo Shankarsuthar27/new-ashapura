@@ -29,12 +29,13 @@ serve(async (req: Request) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Parse subroute action: login, send-otp, verify-otp, reset-password
-    const url = new URL(req.url);
-    const action = url.pathname.split('/').pop();
-
     const body = await req.json().catch(() => ({}));
     const ipAddress = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for') || 'unknown';
+
+    // Parse subroute action: login, send-otp, verify-otp, reset-password
+    const url = new URL(req.url);
+    const pathAction = url.pathname.split('/').pop();
+    const action = (pathAction && pathAction !== 'admin-auth') ? pathAction : body.action;
 
     // Helper: Find administrator user by username or email
     const findAdminUser = async (usernameOrEmail: string) => {
