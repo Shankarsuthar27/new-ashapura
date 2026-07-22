@@ -329,8 +329,7 @@ serve(async (req: Request) => {
           JSON.stringify({
             success: true,
             sandbox: true,
-            otp: otp, // Return OTP to frontend ONLY in sandbox development mode
-            message: `Sandbox mode: OTP logged to console. Gateway warning: ${gatewayMessage || 'No API configuration set'}.`
+            message: `Sandbox mode: OTP code has been generated and logged to your Supabase functions console logs.`
           }),
           { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
         );

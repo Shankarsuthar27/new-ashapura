@@ -76,9 +76,8 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showNewPassword, setShowNewPassword] = useState(false);
   
-  // Timer & Sandbox indicators
+  // Timer indicators
   const [otpTimer, setOtpTimer] = useState(300); // 5 mins in seconds
-  const [sandboxOtp, setSandboxOtp] = useState('');
   
   // UI states
   const [error, setError] = useState('');
@@ -147,7 +146,6 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
     e.preventDefault();
     setError('');
     setIsLoading(true);
-    setSandboxOtp('');
 
     if (!isSupabaseConfigured) {
       setError('Database configuration is missing. Cannot request OTP.');
@@ -160,11 +158,7 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
       setIsLoading(false);
       setOtpTimer(300); // Reset countdown to 5 mins
       setFlowStep('forgot-otp');
-      triggerToast('success', 'A secure 6-digit code has been dispatched.');
-      
-      if (res.sandbox && res.otp) {
-        setSandboxOtp(res.otp);
-      }
+      triggerToast('success', res.message || 'A secure 6-digit code has been dispatched.');
     } catch (err: any) {
       setError(err.message || 'Failed to dispatch OTP. Check user profile.');
       setIsLoading(false);
@@ -199,15 +193,11 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
   const handleResendOtp = async () => {
     setError('');
     setIsLoading(true);
-    setSandboxOtp('');
     try {
       const res = await sendAdminOTP(forgotUserOrEmail);
       setIsLoading(false);
       setOtpTimer(300); // Reset timer
-      triggerToast('success', 'OTP code has been resent.');
-      if (res.sandbox && res.otp) {
-        setSandboxOtp(res.otp);
-      }
+      triggerToast('success', res.message || 'OTP code has been resent.');
     } catch (err: any) {
       setError(err.message || 'Failed to resend OTP.');
       setIsLoading(false);
@@ -517,24 +507,8 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
                 </div>
 
                 <p className="text-gray-400 text-xs mb-5 leading-relaxed text-left">
-                  We have dispatched a 6-digit OTP to the registered owner's mobile number. Please check your phone.
+                  We have dispatched a 6-digit OTP to your registered email address. Please check your inbox.
                 </p>
-
-                {/* Sandbox Developer Alert */}
-                {sandboxOtp && (
-                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-amber-300 text-xs mb-5 space-y-2 text-left">
-                    <div className="flex items-center gap-2 font-semibold">
-                      <Info className="w-4 h-4 shrink-0 text-amber-400" />
-                      <span>Development Sandbox Mode</span>
-                    </div>
-                    <p className="leading-relaxed opacity-90">
-                      No SMS API secrets configured on Supabase. Your generated OTP is:
-                    </p>
-                    <div className="text-center py-1.5 bg-white/5 rounded-xl border border-white/5 font-mono text-lg tracking-widest text-white font-bold select-all">
-                      {sandboxOtp}
-                    </div>
-                  </div>
-                )}
 
                 <form onSubmit={handleVerifyOtp} className="space-y-5">
                   <div className="space-y-1.5 text-center">
