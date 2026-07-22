@@ -183,6 +183,82 @@ serve(async (req: Request) => {
 
       await logAuthEvent(user.username, 'otp_request');
 
+      // Send Email via Resend
+      const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+      let emailSent = false;
+      const targetEmail = user.email || 'ashapura.owner@gmail.com';
+
+      if (RESEND_API_KEY) {
+        try {
+          const emailHtml = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Security OTP Code</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .wrapper { max-width: 500px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid #e5e7eb; }
+    .header { background: #0B1F44; padding: 32px 24px; text-align: center; }
+    .header h1 { margin: 0; color: #C8A96A; font-size: 22px; letter-spacing: 0.05em; font-weight: 600; }
+    .body { padding: 36px 32px; text-align: center; }
+    .intro { font-size: 14px; color: #4b5563; line-height: 1.5; margin-bottom: 24px; }
+    .otp-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin: 24px 0; }
+    .otp-code { font-family: 'Courier New', monospace; font-size: 32px; letter-spacing: 0.15em; color: #0B1F44; font-weight: bold; margin: 0; }
+    .timer { font-size: 12px; color: #EF233C; font-weight: 600; margin-top: 8px; }
+    .warning { font-size: 11px; color: #9ca3af; line-height: 1.5; margin-top: 32px; }
+    .footer { background: #f9fafb; padding: 20px; text-align: center; border-top: 1px solid #e5e7eb; }
+    .footer p { font-size: 11px; color: #9ca3af; margin: 0; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>Ashapura Tiles &amp; Granite</h1>
+    </div>
+    <div class="body">
+      <p class="intro">A password reset request was initiated for your administrator portal account. Use the secure verification code below to proceed:</p>
+      <div class="otp-card">
+        <div class="otp-code">${otp}</div>
+        <div class="timer">⚠️ Valid for 5 minutes only</div>
+      </div>
+      <p class="intro" style="font-size: 12px; margin-top: 16px;">If you did not request this, please ignore this email or contact support to verify your account security.</p>
+      <p class="warning">Do not share this code with anyone. System administrators will never ask for your verification codes.</p>
+    </div>
+    <div class="footer">
+      <p>This is a secure automated notification from your Ashapura system.</p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+          const emailRes = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${RESEND_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: 'Ashapura Security <onboarding@resend.dev>',
+              to: [targetEmail],
+              subject: 'Admin Verification Code — Ashapura Tiles',
+              html: emailHtml,
+            }),
+          });
+
+          const data = await emailRes.json();
+          if (emailRes.ok) {
+            emailSent = true;
+            console.log(`OTP Email sent successfully to ${targetEmail}`);
+          } else {
+            console.error('Resend email delivery failed:', data);
+          }
+        } catch (mailErr) {
+          console.error('Error calling Resend API:', mailErr);
+        }
+      }
+
       // Send SMS
       const FAST2SMS_API_KEY = Deno.env.get('FAST2SMS_API_KEY');
       const TWILIO_ACCOUNT_SID = Deno.env.get('TWILIO_ACCOUNT_SID');
@@ -247,8 +323,8 @@ serve(async (req: Request) => {
       }
 
       // 3. Fallback Sandbox Mode
-      if (!smsSent) {
-        console.warn(`SANDBOX MODE ENABLED (No SMS API Keys found): OTP for admin is ${otp}`);
+      if (!emailSent && !smsSent) {
+        console.warn(`SANDBOX MODE ENABLED (No Email/SMS API Keys found): OTP for admin is ${otp}`);
         return new Response(
           JSON.stringify({
             success: true,
@@ -260,8 +336,17 @@ serve(async (req: Request) => {
         );
       }
 
+      const successMessage = emailSent 
+        ? `OTP code has been sent successfully to your registered email address ${targetEmail}.` 
+        : `OTP code has been sent successfully via SMS.`;
+
       return new Response(
-        JSON.stringify({ success: true, message: 'OTP sent successfully.' }),
+        JSON.stringify({ 
+          success: true, 
+          email_sent: emailSent,
+          sms_sent: smsSent,
+          message: successMessage
+        }),
         { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
