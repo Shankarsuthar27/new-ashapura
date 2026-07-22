@@ -186,7 +186,7 @@ serve(async (req: Request) => {
       // Send Email via Resend
       const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
       let emailSent = false;
-      const targetEmail = user.email || 'ashapura.owner@gmail.com';
+      const targetEmail = user.email || 'ss2137789@gmail.com';
 
       if (RESEND_API_KEY) {
         try {

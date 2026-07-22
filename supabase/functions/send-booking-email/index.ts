@@ -18,7 +18,7 @@ serve(async (req: Request) => {
 
   try {
     const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-    const OWNER_EMAIL   = Deno.env.get('OWNER_EMAIL') ?? 'ashapura.owner@gmail.com';
+    const OWNER_EMAIL   = Deno.env.get('OWNER_EMAIL') ?? 'ss2137789@gmail.com';
 
     if (!RESEND_API_KEY) {
       return new Response(

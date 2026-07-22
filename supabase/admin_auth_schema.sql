@@ -22,7 +22,7 @@ VALUES (
   'admin2233',
   crypt('admin@2233', gen_salt('bf')),
   '9664471637',
-  'ashapura.owner@gmail.com'
+  'ss2137789@gmail.com'
 )
 ON CONFLICT (username) DO NOTHING;
 
