@@ -53,7 +53,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.05]"
         >
-          Ashapura Premium Tiles & Granite at Unbeatable Prices. <br />
+          Ashapura Premium Tiles & Granite at Unbeatable Prices  test. <br />
           <span className="gold-gradient-text italic font-normal">Stone Collection</span>
         </motion.h1>
 
