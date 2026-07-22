@@ -265,3 +265,62 @@ export async function uploadProductImage(file: File): Promise<string | null> {
   }
 }
 
+// ─── Admin Authentication & Password Reset ─────────────────────────────────
+
+/**
+ * Base utility to call the supabase edge function for administrative auth actions
+ */
+async function callAdminAuth(action: string, payload: any) {
+  const url = import.meta.env.VITE_SUPABASE_URL || '';
+  const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL || `${url}/functions/v1`;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+
+  const res = await fetch(`${functionsUrl}/admin-auth/${action}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${anonKey}`,
+      'apikey': anonKey,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw new Error(data.error || `Failed to perform action ${action}`);
+  }
+  return data;
+}
+
+/**
+ * Login administrative user securely using database hashing check
+ */
+export async function loginAdmin(username: string, password: string): Promise<{ success: boolean }> {
+  return callAdminAuth('login', { username, password });
+}
+
+/**
+ * Request an OTP verification code sent to the owner's phone
+ */
+export async function sendAdminOTP(usernameOrEmail: string): Promise<{ success: boolean; sandbox?: boolean; otp?: string; message?: string }> {
+  return callAdminAuth('send-otp', { username_or_email: usernameOrEmail });
+}
+
+/**
+ * Verify OTP code code entered by the owner
+ */
+export async function verifyAdminOTP(usernameOrEmail: string, otp: string): Promise<{ success: boolean; reset_token: string }> {
+  return callAdminAuth('verify-otp', { username_or_email: usernameOrEmail, otp });
+}
+
+/**
+ * Reset password using the valid reset token
+ */
+export async function resetAdminPassword(usernameOrEmail: string, token: string, newPassword: string): Promise<{ success: boolean; message: string }> {
+  return callAdminAuth('reset-password', {
+    username_or_email: usernameOrEmail,
+    reset_token: token,
+    new_password: newPassword
+  });
+}
+

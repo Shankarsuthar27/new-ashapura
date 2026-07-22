@@ -1,6 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShieldCheck, Eye, EyeOff, Lock, User, AlertCircle, KeyRound, X, Copy, Check } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  Eye, 
+  EyeOff, 
+  Lock, 
+  User, 
+  AlertCircle, 
+  KeyRound, 
+  X, 
+  ArrowLeft, 
+  RefreshCw, 
+  CheckCircle2, 
+  LockKeyhole, 
+  Info,
+  Smartphone,
+  Check
+} from 'lucide-react';
+import { 
+  loginAdmin, 
+  sendAdminOTP, 
+  verifyAdminOTP, 
+  resetAdminPassword, 
+  isSupabaseConfigured 
+} from '../lib/supabase';
 
 const ADMIN_USERNAME = 'admin2233';
 const ADMIN_PASSWORD = 'admin@2233';
@@ -28,40 +51,226 @@ interface AdminLoginPageProps {
   onLoginSuccess: () => void;
 }
 
+type FlowStep = 'login' | 'forgot-request' | 'forgot-otp' | 'forgot-reset';
+
+interface PasswordStrength {
+  score: number; // 0 to 4
+  hasMinLength: boolean;
+  hasLetter: boolean;
+  hasNumber: boolean;
+  hasSymbol: boolean;
+}
+
+const checkPasswordStrength = (pass: string): PasswordStrength => {
+  const hasMinLength = pass.length >= 8;
+  const hasLetter = /[a-zA-Z]/.test(pass);
+  const hasNumber = /[0-9]/.test(pass);
+  const hasSymbol = /[^a-zA-Z0-9]/.test(pass);
+  
+  let score = 0;
+  if (hasMinLength) score += 1;
+  if (hasLetter) score += 1;
+  if (hasNumber) score += 1;
+  if (hasSymbol) score += 1;
+  
+  return { score, hasMinLength, hasLetter, hasNumber, hasSymbol };
+};
+
 export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }) => {
+  // Flow management
+  const [flowStep, setFlowStep] = useState<FlowStep>('login');
+  
+  // Login fields
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  
+  // Forgot Password fields
+  const [forgotUserOrEmail, setForgotUserOrEmail] = useState('');
+  const [enteredOtp, setEnteredOtp] = useState('');
+  const [resetToken, setResetToken] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  
+  // Timer & Sandbox indicators
+  const [otpTimer, setOtpTimer] = useState(300); // 5 mins in seconds
+  const [sandboxOtp, setSandboxOtp] = useState('');
+  
+  // UI states
   const [error, setError] = useState('');
+  const [toast, setToast] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
-  const [showForgotModal, setShowForgotModal] = useState(false);
-  const [copiedField, setCopiedField] = useState<'username' | 'password' | null>(null);
 
-  const handleCopy = (text: string, field: 'username' | 'password') => {
-    navigator.clipboard.writeText(text);
-    setCopiedField(field);
-    setTimeout(() => setCopiedField(null), 2000);
+  // Show dynamic toast helper
+  const triggerToast = (type: 'success' | 'error', message: string) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 5000);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Timer Effect
+  useEffect(() => {
+    let interval: any;
+    if (flowStep === 'forgot-otp' && otpTimer > 0) {
+      interval = setInterval(() => {
+        setOtpTimer(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [flowStep, otpTimer]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Submit standard login
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulate small delay for realism
-    await new Promise(r => setTimeout(r, 600));
+    if (!isSupabaseConfigured) {
+      // Local fallback
+      await new Promise(r => setTimeout(r, 600));
+      if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+        setAdminAuth(true);
+        onLoginSuccess();
+      } else {
+        setError('Invalid credentials (local fallback).');
+        setIsLoading(false);
+        setShake(true);
+        setTimeout(() => setShake(false), 600);
+      }
+      return;
+    }
 
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+    try {
+      await loginAdmin(username, password);
       setAdminAuth(true);
       onLoginSuccess();
-    } else {
-      setError('Invalid username or password. Please try again.');
+    } catch (err: any) {
+      setError(err.message || 'Invalid username or password. Please try again.');
       setIsLoading(false);
       setShake(true);
       setTimeout(() => setShake(false), 600);
     }
   };
+
+  // Submit request for OTP code
+  const handleRequestOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+    setSandboxOtp('');
+
+    if (!isSupabaseConfigured) {
+      setError('Database configuration is missing. Cannot request OTP.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await sendAdminOTP(forgotUserOrEmail);
+      setIsLoading(false);
+      setOtpTimer(300); // Reset countdown to 5 mins
+      setFlowStep('forgot-otp');
+      triggerToast('success', 'A secure 6-digit code has been dispatched.');
+      
+      if (res.sandbox && res.otp) {
+        setSandboxOtp(res.otp);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to dispatch OTP. Check user profile.');
+      setIsLoading(false);
+    }
+  };
+
+  // Submit OTP code verification
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsLoading(true);
+
+    if (otpTimer <= 0) {
+      setError('This OTP code has expired. Please request a new code.');
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const res = await verifyAdminOTP(forgotUserOrEmail, enteredOtp);
+      setResetToken(res.reset_token);
+      setIsLoading(false);
+      setFlowStep('forgot-reset');
+      triggerToast('success', 'Verification complete. Update password below.');
+    } catch (err: any) {
+      setError(err.message || 'OTP verification failed.');
+      setIsLoading(false);
+    }
+  };
+
+  // Resend OTP trigger
+  const handleResendOtp = async () => {
+    setError('');
+    setIsLoading(true);
+    setSandboxOtp('');
+    try {
+      const res = await sendAdminOTP(forgotUserOrEmail);
+      setIsLoading(false);
+      setOtpTimer(300); // Reset timer
+      triggerToast('success', 'OTP code has been resent.');
+      if (res.sandbox && res.otp) {
+        setSandboxOtp(res.otp);
+      }
+    } catch (err: any) {
+      setError(err.message || 'Failed to resend OTP.');
+      setIsLoading(false);
+    }
+  };
+
+  // Submit password reset
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    const strength = checkPasswordStrength(newPassword);
+    if (strength.score < 3 || !strength.hasMinLength) {
+      setError('Password does not meet the minimum security strength criteria.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await resetAdminPassword(forgotUserOrEmail, resetToken, newPassword);
+      setIsLoading(false);
+      setFlowStep('login');
+      setUsername(forgotUserOrEmail);
+      setPassword('');
+      triggerToast('success', 'Password reset successfully.');
+    } catch (err: any) {
+      setError(err.message || 'Password update failed.');
+      setIsLoading(false);
+    }
+  };
+
+  // Password strength check helper variables
+  const strength = checkPasswordStrength(newPassword);
+  const strengthLabels = ['Weak', 'Weak', 'Moderate', 'Strong', 'Very Strong'];
+  const strengthColors = [
+    'bg-red-500', 
+    'bg-red-500', 
+    'bg-amber-500', 
+    'bg-emerald-500', 
+    'bg-green-500'
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0B1F44] via-[#0f2a5c] to-[#0B1F44] flex items-center justify-center px-4 relative overflow-hidden">
@@ -80,6 +289,29 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
           backgroundSize: '40px 40px'
         }}
       />
+
+      {/* Floating Status Toast Notifications */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: -40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -40, scale: 0.95 }}
+            className={`fixed top-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl border shadow-2xl backdrop-blur-md max-w-sm w-[90%] ${
+              toast.type === 'success' 
+                ? 'bg-green-500/10 border-green-500/20 text-green-300' 
+                : 'bg-red-500/10 border-red-500/20 text-red-300'
+            }`}
+          >
+            {toast.type === 'success' ? (
+              <CheckCircle2 className="w-5 h-5 shrink-0 text-green-400" />
+            ) : (
+              <AlertCircle className="w-5 h-5 shrink-0 text-red-400" />
+            )}
+            <span className="text-sm font-medium">{toast.message}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
@@ -104,103 +336,425 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
           </p>
         </div>
 
-        {/* Login Card */}
-        <div className="bg-white/[0.07] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
-          <h2 className="text-white text-lg font-semibold mb-6">Sign in to continue</h2>
+        {/* Dynamic Auth Card Layout */}
+        <div className="bg-white/[0.07] backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl overflow-hidden">
+          
+          <AnimatePresence mode="wait">
+            
+            {/* STEP 1: Standard Login Form */}
+            {flowStep === 'login' && (
+              <motion.div
+                key="login-step"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <h2 className="text-white text-lg font-semibold mb-6">Sign in to continue</h2>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Username */}
-            <div className="space-y-1.5">
-              <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block">
-                Username
-              </label>
-              <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  value={username}
-                  onChange={e => { setUsername(e.target.value); setError(''); }}
-                  placeholder="Enter username"
-                  autoComplete="username"
-                  required
-                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
-                />
-              </div>
-            </div>
+                <form onSubmit={handleLoginSubmit} className="space-y-5">
+                  {/* Username */}
+                  <div className="space-y-1.5">
+                    <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block">
+                      Username
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        value={username}
+                        onChange={e => { setUsername(e.target.value); setError(''); }}
+                        placeholder="Enter username"
+                        autoComplete="username"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
+                      />
+                    </div>
+                  </div>
 
-            {/* Password */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block">
-                  Password
-                </label>
-                <button
-                  type="button"
-                  onClick={() => setShowForgotModal(true)}
-                  className="text-xs text-gray-400 hover:text-[#C8A96A] transition-colors focus:outline-none font-medium"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => { setPassword(e.target.value); setError(''); }}
-                  placeholder="Enter password"
-                  autoComplete="current-password"
-                  required
-                  className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(p => !p)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C8A96A] transition-colors"
-                  tabIndex={-1}
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
+                  {/* Password */}
+                  <div className="space-y-1.5">
+                    <div className="flex justify-between items-center">
+                      <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block">
+                        Password
+                      </label>
+                    </div>
+                    <div className="relative">
+                      <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={e => { setPassword(e.target.value); setError(''); }}
+                        placeholder="Enter password"
+                        autoComplete="current-password"
+                        required
+                        className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(p => !p)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C8A96A] transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
 
-            {/* Error Message */}
-            <AnimatePresence>
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm"
-                >
-                  <AlertCircle className="w-4 h-4 shrink-0" />
-                  <span>{error}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+                  {/* Forgot link positioned below password field */}
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => { setFlowStep('forgot-request'); setError(''); }}
+                      className="text-xs text-gray-400 hover:text-[#C8A96A] transition-colors focus:outline-none font-medium"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#EF233C] to-[#d90429] hover:from-[#d90429] hover:to-[#c0001f] text-white font-bold text-sm uppercase tracking-wider transition-all shadow-lg shadow-red-600/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                  </svg>
-                  Authenticating...
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="w-4 h-4" />
-                  Sign In to Admin Panel
-                </>
-              )}
-            </button>
-          </form>
+                  {/* Error Message */}
+                  {error && (
+                    <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#EF233C] to-[#d90429] hover:from-[#d90429] hover:to-[#c0001f] text-white font-bold text-sm uppercase tracking-wider transition-all shadow-lg shadow-red-600/20 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Authenticating...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4" />
+                        Sign In to Admin Panel
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+
+            {/* STEP 2: Request Forgot Password OTP */}
+            {flowStep === 'forgot-request' && (
+              <motion.div
+                key="request-otp-step"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <button
+                    onClick={() => { setFlowStep('login'); setError(''); }}
+                    className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <h2 className="text-white text-lg font-semibold">Reset Password</h2>
+                </div>
+
+                <p className="text-gray-400 text-xs mb-5 leading-relaxed text-left">
+                  Enter your registered administrator username or email address. We will send a secure 6-digit OTP code to the system owner's phone number (**9974617657**).
+                </p>
+
+                <form onSubmit={handleRequestOtp} className="space-y-5">
+                  <div className="space-y-1.5">
+                    <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block text-left">
+                      Username or Email
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type="text"
+                        value={forgotUserOrEmail}
+                        onChange={e => { setForgotUserOrEmail(e.target.value); setError(''); }}
+                        placeholder="e.g. admin2233"
+                        required
+                        className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#C8A96A] to-[#a07840] hover:from-[#d5b67a] hover:to-[#b0874c] text-white font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="animate-spin w-4 h-4" />
+                        Generating Code...
+                      </>
+                    ) : (
+                      <>
+                        <Smartphone className="w-4 h-4" />
+                        Send OTP SMS
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+
+            {/* STEP 3: Verify 6-digit OTP */}
+            {flowStep === 'forgot-otp' && (
+              <motion.div
+                key="verify-otp-step"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <button
+                    onClick={() => { setFlowStep('forgot-request'); setError(''); }}
+                    className="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-white/5 transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <h2 className="text-white text-lg font-semibold">Enter Security Code</h2>
+                </div>
+
+                <p className="text-gray-400 text-xs mb-5 leading-relaxed text-left">
+                  We have dispatched a 6-digit OTP to the registered owner's mobile number. Please check your phone.
+                </p>
+
+                {/* Sandbox Developer Alert */}
+                {sandboxOtp && (
+                  <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-4 text-amber-300 text-xs mb-5 space-y-2 text-left">
+                    <div className="flex items-center gap-2 font-semibold">
+                      <Info className="w-4 h-4 shrink-0 text-amber-400" />
+                      <span>Development Sandbox Mode</span>
+                    </div>
+                    <p className="leading-relaxed opacity-90">
+                      No SMS API secrets configured on Supabase. Your generated OTP is:
+                    </p>
+                    <div className="text-center py-1.5 bg-white/5 rounded-xl border border-white/5 font-mono text-lg tracking-widest text-white font-bold select-all">
+                      {sandboxOtp}
+                    </div>
+                  </div>
+                )}
+
+                <form onSubmit={handleVerifyOtp} className="space-y-5">
+                  <div className="space-y-1.5 text-center">
+                    <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block text-left">
+                      Verification OTP Code
+                    </label>
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={enteredOtp}
+                      onChange={e => { setEnteredOtp(e.target.value.replace(/\D/g, '')); setError(''); }}
+                      placeholder="e.g. 123456"
+                      required
+                      className="w-full text-center py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all font-mono text-xl tracking-widest"
+                    />
+                  </div>
+
+                  {/* Timer Display */}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-gray-400">Code expires in:</span>
+                    <span className={`font-mono font-semibold ${otpTimer <= 60 ? 'text-[#EF233C]' : 'text-[#C8A96A]'}`}>
+                      {formatTime(otpTimer)}
+                    </span>
+                  </div>
+
+                  {error && (
+                    <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm text-left">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isLoading || enteredOtp.length !== 6}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#C8A96A] to-[#a07840] hover:from-[#d5b67a] hover:to-[#b0874c] text-white font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="animate-spin w-4 h-4" />
+                        Verifying...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="w-4 h-4" />
+                        Verify Code
+                      </>
+                    )}
+                  </button>
+
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      disabled={isLoading || otpTimer > 0}
+                      onClick={handleResendOtp}
+                      className="text-xs text-gray-400 hover:text-white transition-colors disabled:opacity-40 disabled:hover:text-gray-400 font-medium flex items-center gap-1.5 mx-auto"
+                    >
+                      <RefreshCw className={`w-3.5 h-3.5 ${isLoading ? 'animate-spin' : ''}`} />
+                      Resend Code {otpTimer > 0 ? `(${otpTimer}s)` : ''}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+
+            {/* STEP 4: Reset Password Page */}
+            {flowStep === 'forgot-reset' && (
+              <motion.div
+                key="reset-password-step"
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <div className="flex items-center gap-2 mb-6">
+                  <h2 className="text-white text-lg font-semibold">Set New Password</h2>
+                </div>
+
+                <p className="text-gray-400 text-xs mb-5 leading-relaxed text-left">
+                  Provide a new secure password. Resetting the password will invalidate any previous tokens and log out existing sessions.
+                </p>
+
+                <form onSubmit={handlePasswordReset} className="space-y-4">
+                  {/* New Password */}
+                  <div className="space-y-1.5">
+                    <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block text-left">
+                      New Password
+                    </label>
+                    <div className="relative">
+                      <LockKeyhole className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        value={newPassword}
+                        onChange={e => { setNewPassword(e.target.value); setError(''); }}
+                        placeholder="Minimum 8 characters"
+                        required
+                        className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowNewPassword(p => !p)}
+                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#C8A96A] transition-colors"
+                        tabIndex={-1}
+                      >
+                        {showNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Confirm Password */}
+                  <div className="space-y-1.5">
+                    <label className="text-[#C8A96A] text-xs font-bold uppercase tracking-widest block text-left">
+                      Confirm New Password
+                    </label>
+                    <div className="relative">
+                      <LockKeyhole className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                      <input
+                        type={showNewPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={e => { setConfirmPassword(e.target.value); setError(''); }}
+                        placeholder="Repeat new password"
+                        required
+                        className="w-full pl-10 pr-12 py-3 bg-white/10 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#C8A96A]/60 focus:ring-1 focus:ring-[#C8A96A]/40 transition-all text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Password Strength Indicator */}
+                  {newPassword.length > 0 && (
+                    <div className="bg-white/5 rounded-2xl p-4 border border-white/5 space-y-3 text-left animate-fadeIn">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-gray-400">Password Strength:</span>
+                        <span className={`font-bold ${
+                          strength.score <= 1 ? 'text-red-400' : strength.score === 2 ? 'text-amber-400' : 'text-green-400'
+                        }`}>
+                          {strengthLabels[strength.score]}
+                        </span>
+                      </div>
+                      
+                      {/* Strength meter bars */}
+                      <div className="grid grid-cols-4 gap-1.5">
+                        {[0, 1, 2, 3].map(index => (
+                          <div
+                            key={index}
+                            className={`h-1.5 rounded-full transition-all ${
+                              index < strength.score ? strengthColors[strength.score] : 'bg-white/10'
+                            }`}
+                          />
+                        ))}
+                      </div>
+
+                      {/* Criteria Checklist */}
+                      <div className="space-y-1.5 pt-1 text-[11px]">
+                        <div className="flex items-center gap-1.5">
+                          <Check className={`w-3.5 h-3.5 ${strength.hasMinLength ? 'text-green-400' : 'text-gray-500'}`} />
+                          <span className={strength.hasMinLength ? 'text-gray-300' : 'text-gray-500'}>Minimum 8 characters</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Check className={`w-3.5 h-3.5 ${strength.hasLetter ? 'text-green-400' : 'text-gray-500'}`} />
+                          <span className={strength.hasLetter ? 'text-gray-300' : 'text-gray-500'}>Contains letters (a-z)</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Check className={`w-3.5 h-3.5 ${strength.hasNumber ? 'text-green-400' : 'text-gray-500'}`} />
+                          <span className={strength.hasNumber ? 'text-gray-300' : 'text-gray-500'}>Contains numbers (0-9)</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Check className={`w-3.5 h-3.5 ${strength.hasSymbol ? 'text-green-400' : 'text-gray-500'}`} />
+                          <span className={strength.hasSymbol ? 'text-gray-300' : 'text-gray-500'}>Contains special symbols</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm text-left">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{error}</span>
+                    </div>
+                  )}
+
+                  <button
+                    type="submit"
+                    disabled={isLoading || strength.score < 3 || newPassword !== confirmPassword}
+                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#EF233C] to-[#d90429] hover:from-[#d90429] hover:to-[#c0001f] text-white font-bold text-sm uppercase tracking-wider transition-all disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isLoading ? (
+                      <>
+                        <RefreshCw className="animate-spin w-4 h-4" />
+                        Updating Password...
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4" />
+                        Update Password & Log In
+                      </>
+                    )}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+            
+          </AnimatePresence>
+
         </div>
 
         {/* Footer Note */}
@@ -220,98 +774,6 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
           90% { transform: translateX(2px); }
         }
       `}</style>
-
-      {/* Forgot Password Modal */}
-      <AnimatePresence>
-        {showForgotModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 15, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 15, opacity: 0 }}
-              transition={{ type: 'spring', duration: 0.4 }}
-              className="bg-[#0e2246] border border-white/10 rounded-3xl p-6 max-w-sm w-full shadow-2xl relative text-left"
-            >
-              {/* Close Button */}
-              <button
-                type="button"
-                onClick={() => setShowForgotModal(false)}
-                className="absolute right-4 top-4 text-gray-400 hover:text-white p-1.5 rounded-full hover:bg-white/5 transition-all"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="flex flex-col items-center text-center">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#C8A96A] to-[#a07840] flex items-center justify-center shadow-lg mb-4">
-                  <KeyRound className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Password Recovery</h3>
-                <p className="text-gray-300 text-sm mb-6 leading-relaxed">
-                  This system is configured with pre-set administrator credentials. You can find them below:
-                </p>
-
-                {/* Credentials Container */}
-                <div className="w-full space-y-3 bg-white/5 rounded-2xl p-4 border border-white/5 text-left mb-6">
-                  {/* Username Field */}
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#C8A96A] tracking-wider block">Username</span>
-                      <span className="text-sm font-mono text-white select-all">{ADMIN_USERNAME}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(ADMIN_USERNAME, 'username')}
-                      className="p-2 text-gray-400 hover:text-[#C8A96A] hover:bg-white/5 rounded-lg transition-colors"
-                      title="Copy username"
-                    >
-                      {copiedField === 'username' ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-
-                  <div className="border-t border-white/5 my-2" />
-
-                  {/* Password Field */}
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <span className="text-[10px] uppercase font-bold text-[#C8A96A] tracking-wider block">Password</span>
-                      <span className="text-sm font-mono text-white select-all">{ADMIN_PASSWORD}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleCopy(ADMIN_PASSWORD, 'password')}
-                      className="p-2 text-gray-400 hover:text-[#C8A96A] hover:bg-white/5 rounded-lg transition-colors"
-                      title="Copy password"
-                    >
-                      {copiedField === 'password' ? (
-                        <Check className="w-4 h-4 text-green-400" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setShowForgotModal(false)}
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-[#C8A96A] to-[#a07840] hover:from-[#d5b67a] hover:to-[#b0874c] text-white font-bold text-sm tracking-wider uppercase transition-all shadow-lg shadow-[#C8A96A]/10"
-                >
-                  Got it, close
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
