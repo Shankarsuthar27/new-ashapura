@@ -42,7 +42,7 @@ serve(async (req: Request) => {
       const { data, error } = await supabase
         .from('admin_users')
         .select('*')
-        .or(`username.eq."${usernameOrEmail}",email.eq."${usernameOrEmail}"`)
+        .or(`username.eq.${usernameOrEmail},email.eq.${usernameOrEmail}`)
         .maybeSingle();
       if (error) {
         console.error('Error finding user:', error);
