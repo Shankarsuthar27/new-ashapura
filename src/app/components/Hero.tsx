@@ -58,7 +58,7 @@ export const Hero: React.FC = () => {
         </motion.h1>
 
         {/* Subheadline */}
-        <motion.p
+        <motion.p 
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
