@@ -170,6 +170,26 @@ serve(async (req: Request) => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
+  // Auto-seed default admin if table is empty
+  try {
+    const { count } = await supabase
+      .from('admin_users')
+      .select('*', { count: 'exact', head: true });
+    if (count === 0) {
+      console.log('[forgot-password] Seeding default admin user...');
+      await supabase
+        .from('admin_users')
+        .insert({
+          username: 'admin2233',
+          password_hash: '$2b$10$/ayttLqNdzfvtKRihTLaCeb2wbLOG4QvMyQ0cZzjzFqOcayKJHque',
+          phone: '9664471637',
+          email: 'ss2137789@gmail.com'
+        });
+    }
+  } catch (e) {
+    console.warn('[forgot-password] Auto-seed failed:', e);
+  }
+
   let body: Record<string, string>;
   try {
     body = await req.json();

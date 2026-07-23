@@ -175,7 +175,7 @@ export const Footer: React.FC = () => {
             <div className="space-y-2.5 text-xs text-gray-400">
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-[#C8A96A] shrink-0" />
-                <span>680 Fifth Avenue, Suite 1400, New York, NY 10019</span>
+                <span>Bhadriya Colony, Barloot Road, Kalandari, Sirohi (Rajasthan)</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#C8A96A] shrink-0" />
@@ -193,7 +193,7 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar Copyright */}
         <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500 gap-4">
-          <p>© 2026 Aurelia Marmi Luxury Stone Atelier. All Rights Reserved.</p>
+          <p>© 2026 Ashapura tiles and granite. build by ASHTASOFT.</p>
           <div className="flex items-center space-x-6">
             <span className="hover:underline cursor-pointer">Privacy Policy</span>
             <span className="hover:underline cursor-pointer">Terms of Specification</span>

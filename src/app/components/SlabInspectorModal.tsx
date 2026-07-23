@@ -89,9 +89,6 @@ export const SlabInspectorModal: React.FC = () => {
                   <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold">
                     {slab.category} Stone • {slab.origin}
                   </span>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#C8A96A]/10 text-[#C8A96A]">
-                    {slab.priceTier}
-                  </span>
                 </div>
 
                 <h2 className="font-serif-luxury text-3xl font-bold text-gray-900 dark:text-gray-100 mb-3">

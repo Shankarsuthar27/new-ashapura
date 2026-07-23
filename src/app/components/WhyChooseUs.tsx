@@ -34,7 +34,7 @@ const FEATURES = [
   {
     icon: Award,
     title: 'Certified Authentic Materials',
-    description: 'Every slab comes with a certified Certificate of Origin detailing geological composition and origin.'
+    description: 'Every slab comes with a certified Quality & Authenticity certificate detailing geological composition.'
   },
   {
     icon: CircleDollarSign,
@@ -52,7 +52,7 @@ const COUNTERS = [
 
 export const WhyChooseUs: React.FC = () => {
   return (
-    <section className="py-24 bg-[#F8F8F8] dark:bg-[#0E0E11] text-gray-900 dark:text-gray-100 relative">
+    <section id="why-choose-us" className="py-24 bg-[#F8F8F8] dark:bg-[#0E0E11] text-gray-900 dark:text-gray-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">

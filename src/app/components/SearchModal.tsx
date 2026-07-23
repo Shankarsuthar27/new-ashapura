@@ -123,9 +123,6 @@ export const SearchModal: React.FC = () => {
                           </p>
                         </div>
                       </div>
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C8A96A]/10 text-[#C8A96A]">
-                        {slab.priceTier}
-                      </span>
                     </div>
                   ))}
                 </div>

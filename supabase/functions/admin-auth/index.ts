@@ -31,6 +31,26 @@ serve(async (req: Request) => {
 
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    // Auto-seed default admin if table is empty
+    try {
+      const { count } = await supabase
+        .from('admin_users')
+        .select('*', { count: 'exact', head: true });
+      if (count === 0) {
+        console.log('[admin-auth] Seeding default admin user...');
+        await supabase
+          .from('admin_users')
+          .insert({
+            username: 'admin2233',
+            password_hash: '$2b$10$/ayttLqNdzfvtKRihTLaCeb2wbLOG4QvMyQ0cZzjzFqOcayKJHque',
+            phone: '9664471637',
+            email: 'ss2137789@gmail.com'
+          });
+      }
+    } catch (e) {
+      console.warn('[admin-auth] Auto-seed failed:', e);
+    }
+
     const body = await req.json().catch(() => ({}));
     const ipAddress = req.headers.get('x-real-ip') || req.headers.get('x-forwarded-for') || 'unknown';
 

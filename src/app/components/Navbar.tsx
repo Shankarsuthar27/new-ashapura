@@ -155,10 +155,10 @@ export const Navbar: React.FC = () => {
 
 
             <button
-              onClick={() => handleNavClick('/', 'gallery')}
+              onClick={() => handleNavClick('/', 'why-choose-us')}
               className="hover:text-[#C8A96A] transition-colors"
             >
-              Inspiration
+              Choose Us
             </button>
 
             <button
@@ -251,10 +251,10 @@ export const Navbar: React.FC = () => {
                 Collections
               </button>
               <button
-                onClick={() => handleNavClick('/', 'gallery')}
+                onClick={() => handleNavClick('/', 'why-choose-us')}
                 className="text-left py-2 border-b border-gray-100 dark:border-white/5 hover:text-[#C8A96A]"
               >
-                Inspiration
+                Choose Us
               </button>
               <button
                 onClick={() => handleNavClick('/admin')}

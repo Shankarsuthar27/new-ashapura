@@ -100,9 +100,6 @@ export const CategoryPage: React.FC = () => {
 
                 <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
                   <div>
-                    <span className="text-xs text-[#C8A96A] font-semibold uppercase tracking-wider block">
-                      {slab.origin}
-                    </span>
                     <h4
                       onClick={() => navigate(`/product/${slab.id}`)}
                       className="font-serif-luxury text-2xl font-bold mt-1 cursor-pointer group-hover:text-[#C8A96A] transition-colors"

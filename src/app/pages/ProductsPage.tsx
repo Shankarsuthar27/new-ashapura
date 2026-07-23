@@ -367,7 +367,7 @@ export const ProductsPage: React.FC = () => {
                         style={{ backgroundColor: COLOR_HEX_MAP[product.color] || '#6B7280' }}
                       />
                       <span className="text-xs font-semibold text-gray-500">
-                        {product.color} Series • {product.origin || 'Imported'}
+                        {product.color} Series
                       </span>
                     </div>
 

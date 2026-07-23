@@ -138,6 +138,7 @@ export const AdminPage: React.FC = () => {
   const [formData, setFormData] = useState<Partial<StoneSlab>>(initialFormState);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -209,12 +210,14 @@ export const AdminPage: React.FC = () => {
     return true;
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.category || !formData.image || formData.price === undefined) {
       alert('Please fill out the product name, category, price, and select/upload an image.');
       return;
     }
+
+    setIsSaving(true);
 
     const slabId = editingSlab
       ? editingSlab.id
@@ -249,13 +252,20 @@ export const AdminPage: React.FC = () => {
       }
     };
 
-    if (editingSlab) {
-      updateSlab(slabToSave);
-      setEditingSlab(null);
-    } else {
-      addSlab(slabToSave);
-      setFormData(initialFormState);
+    try {
+      if (editingSlab) {
+        await updateSlab(slabToSave);
+        setEditingSlab(null);
+      } else {
+        await addSlab(slabToSave);
+        setFormData(initialFormState);
+      }
       setActiveTab('inventory');
+    } catch (err) {
+      console.error('Error saving product:', err);
+      alert('Error saving product: ' + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -484,18 +494,6 @@ export const AdminPage: React.FC = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Origin Quarry / Country
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Castellón, Spain or Carrara, Italy"
-                    value={formData.origin || ''}
-                    onChange={e => setFormData({ ...formData, origin: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
 
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
@@ -542,20 +540,6 @@ export const AdminPage: React.FC = () => {
                   </select>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Price Tier Rating
-                  </label>
-                  <select
-                    value={formData.priceTier || '$$$$'}
-                    onChange={e => setFormData({ ...formData, priceTier: e.target.value as any })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 focus:border-[#C8A96A] focus:outline-none"
-                  >
-                    <option value="$$$">$$$ - Luxury Architectural Grade</option>
-                    <option value="$$$$">$$$$ - Signature Select Collection</option>
-                    <option value="$$$$$">$$$$$ - Rare Ultra-Exotic Heritage</option>
-                  </select>
-                </div>
 
                 <div className="space-y-2">
                   <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
@@ -737,10 +721,20 @@ export const AdminPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#DFBA73] via-[#C8A96A] to-[#8C6D2B] text-black font-bold text-xs uppercase tracking-widest shadow-xl hover:brightness-110 transition-all flex items-center gap-2"
+                  disabled={isSaving}
+                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#DFBA73] via-[#C8A96A] to-[#8C6D2B] text-black font-bold text-xs uppercase tracking-widest shadow-xl hover:brightness-110 disabled:opacity-50 disabled:pointer-events-none transition-all flex items-center gap-2"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
-                  {editingSlab ? 'Save Changes' : 'Publish Product to Live Inventory'}
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>{editingSlab ? 'Save Changes' : 'Publish Product to Live Inventory'}</span>
+                    </>
+                  )}
                 </button>
               </div>
             </form>
@@ -774,7 +768,7 @@ export const AdminPage: React.FC = () => {
                 <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Search name, color, origin..."
+                  placeholder="Search name, color..."
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl pl-11 pr-4 py-2 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
@@ -842,7 +836,6 @@ export const AdminPage: React.FC = () => {
                           </td>
 
                           <td className="py-4 px-4 text-gray-700 dark:text-gray-300">
-                            <p className="font-medium text-xs">{slab.origin}</p>
                             <p className="text-[10px] text-gray-400">{slab.dimensions}</p>
                           </td>
 
@@ -851,7 +844,7 @@ export const AdminPage: React.FC = () => {
                               {slab.price !== undefined && slab.price !== null ? `₹${slab.price}` : '—'}
                             </p>
                             <p className="text-[10px] text-gray-400">
-                              {slab.unit || 'Per Square Foot'} ({slab.priceTier})
+                              {slab.unit || 'Per Square Foot'}
                             </p>
                           </td>
 

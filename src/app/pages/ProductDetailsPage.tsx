@@ -81,10 +81,7 @@ export const ProductDetailsPage: React.FC = () => {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold">
-                  {slab.category} Stone • {slab.origin}
-                </span>
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C8A96A]/10 text-[#C8A96A]">
-                  {slab.priceTier}
+                  {slab.category} Stone
                 </span>
               </div>
 
@@ -188,13 +185,12 @@ export const ProductDetailsPage: React.FC = () => {
             productName={slab.name}
             price={derivedPrice}
             category={slab.category}
-            origin={slab.origin}
             slabSize={slab.dimensions || "ORIGINAL"}
             thickness={slab.thickness || "15–16 mm"}
             finish={activeFinish || "Polished"}
             priceRange={`₹${derivedPrice} / ${derivedUnit === 'Per Square Foot' ? 'sq.ft.' : derivedUnit}`}
             stoneType={slab.category}
-            customDescription={`${slab.name} is a premium ${slab.category} sourced from ${slab.origin}. Carefully selected for residential and commercial projects, it is ideal for flooring, countertops, wall cladding, staircases, and luxury interiors. Known for its durability, elegant appearance, and long-lasting performance, it enhances both modern and traditional spaces.`}
+            customDescription={`${slab.name} is a premium ${slab.category}. Carefully selected for residential and commercial projects, it is ideal for flooring, countertops, wall cladding, staircases, and luxury interiors. Known for its durability, elegant appearance, and long-lasting performance, it enhances both modern and traditional spaces.`}
             image={slab.image}
           />
         </div>
