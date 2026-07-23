@@ -8,7 +8,6 @@ import {
   Search,
   Package,
   Layers,
-  RefreshCw,
   CheckCircle2,
   XCircle,
   Image as ImageIcon,
@@ -96,7 +95,7 @@ const PRESET_IMAGES = [
 ];
 
 export const AdminPage: React.FC = () => {
-  const { slabs, addSlab, updateSlab, deleteSlab, resetSlabsToDefault } = useStone();
+  const { slabs, addSlab, updateSlab, deleteSlab } = useStone();
 
   // --- ALL HOOKS MUST BE DECLARED BEFORE ANY CONDITIONAL RETURN ---
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => getAdminAuth());
@@ -318,18 +317,6 @@ export const AdminPage: React.FC = () => {
                   <Plus className="w-4 h-4" /> Add New Product (Tiles / Granite / Marble)
                 </>
               )}
-            </button>
-
-            <button
-              onClick={() => {
-                if (confirm('Are you sure you want to reset all product inventory to default initial values?')) {
-                  resetSlabsToDefault();
-                }
-              }}
-              title="Reset inventory to default values"
-              className="px-4 py-3 rounded-xl border border-gray-700 hover:border-red-500 hover:text-red-400 text-xs font-semibold text-gray-300 transition-colors flex items-center gap-2"
-            >
-              <RefreshCw className="w-4 h-4" /> Reset Demo Data
             </button>
 
             <button
