@@ -116,7 +116,7 @@ export const ShowroomLocations: React.FC = () => {
             />
             <div className="absolute top-4 left-4 bg-black/80 backdrop-blur-md px-4 py-2 rounded-xl text-white text-xs font-semibold flex items-center gap-2 border border-white/20">
               <MapPin className="w-4 h-4 text-[#C8A96A]" />
-              <span>{showroom.city} Flagship Atelier</span>
+              <span>{showroom.city}</span>
             </div>
           </div>
 

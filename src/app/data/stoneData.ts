@@ -319,7 +319,7 @@ export const SLABS_DATA: StoneSlab[] = [
 export const SHOWROOM_LOCATIONS: Showroom[] = [
   {
     id: 'Sirohi',
-    city: 'Sirohi',
+    city: 'Kalandari,Sirohi',
     title: 'Ashapura tiles & Granite',
     address: 'Bhadriya Colony, Barloot Road, Kalandari, Sirohi (Rajasthan)',
     phone: '+919974617657',
