@@ -35,9 +35,9 @@ interface StoneContextType {
   openConsultationWithSlab: (slab?: StoneSlab) => void;
   // Slabs / Products Management
   slabs: StoneSlab[];
-  addSlab: (newSlab: StoneSlab) => void;
-  updateSlab: (updatedSlab: StoneSlab) => void;
-  deleteSlab: (id: string) => void;
+  addSlab: (newSlab: StoneSlab) => Promise<void>;
+  updateSlab: (updatedSlab: StoneSlab) => Promise<void>;
+  deleteSlab: (id: string) => Promise<void>;
   resetSlabsToDefault: () => void;
 }
 
@@ -125,28 +125,37 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }, 4000);
   };
 
-  const addSlab = (newSlab: StoneSlab) => {
+  const addSlab = async (newSlab: StoneSlab) => {
+    if (isSupabaseConfigured) {
+      const success = await addSupabaseSlab(newSlab);
+      if (!success) {
+        throw new Error(`Failed to save ${newSlab.name} to database. See console for details.`);
+      }
+    }
     setSlabs(prev => [newSlab, ...prev]);
     showToast(`Added ${newSlab.name} to catalog`, 'success');
-    if (isSupabaseConfigured) {
-      addSupabaseSlab(newSlab);
-    }
   };
 
-  const updateSlab = (updatedSlab: StoneSlab) => {
+  const updateSlab = async (updatedSlab: StoneSlab) => {
+    if (isSupabaseConfigured) {
+      const success = await updateSupabaseSlab(updatedSlab);
+      if (!success) {
+        throw new Error(`Failed to update ${updatedSlab.name} in database. See console for details.`);
+      }
+    }
     setSlabs(prev => prev.map(item => (item.id === updatedSlab.id ? updatedSlab : item)));
     showToast(`Updated ${updatedSlab.name} details`, 'success');
-    if (isSupabaseConfigured) {
-      updateSupabaseSlab(updatedSlab);
-    }
   };
 
-  const deleteSlab = (id: string) => {
+  const deleteSlab = async (id: string) => {
+    if (isSupabaseConfigured) {
+      const success = await deleteSupabaseSlab(id);
+      if (!success) {
+        throw new Error('Failed to delete product from database. See console for details.');
+      }
+    }
     setSlabs(prev => prev.filter(item => item.id !== id));
     showToast('Product removed from inventory catalog', 'info');
-    if (isSupabaseConfigured) {
-      deleteSupabaseSlab(id);
-    }
   };
 
   const resetSlabsToDefault = () => {

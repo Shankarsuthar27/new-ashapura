@@ -105,6 +105,7 @@ export const AdminPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [editingSlab, setEditingSlab] = useState<StoneSlab | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   // Form State for Adding / Editing
   const initialFormState: Partial<StoneSlab> = {
@@ -873,17 +874,28 @@ export const AdminPage: React.FC = () => {
                               {deleteConfirmId === slab.id ? (
                                 <div className="flex items-center gap-1 bg-red-500/10 p-1 rounded-lg border border-red-500/30">
                                   <button
-                                    onClick={() => {
-                                      deleteSlab(slab.id);
-                                      setDeleteConfirmId(null);
+                                    disabled={isDeleting === slab.id}
+                                    onClick={async () => {
+                                      setIsDeleting(slab.id);
+                                      try {
+                                        await deleteSlab(slab.id);
+                                        setDeleteConfirmId(null);
+                                      } catch (err) {
+                                        console.error('Delete failed:', err);
+                                        alert(err instanceof Error ? err.message : String(err));
+                                      } finally {
+                                        setIsDeleting(null);
+                                      }
                                     }}
-                                    className="px-2 py-1 bg-red-600 text-white font-bold text-[10px] rounded hover:bg-red-700"
+                                    className="px-2 py-1 bg-red-600 text-white font-bold text-[10px] rounded hover:bg-red-700 disabled:opacity-50 flex items-center gap-1"
                                   >
-                                    Confirm Delete
+                                    {isDeleting === slab.id && <Loader2 className="w-3 h-3 animate-spin" />}
+                                    {isDeleting === slab.id ? 'Deleting...' : 'Confirm Delete'}
                                   </button>
                                   <button
+                                    disabled={isDeleting === slab.id}
                                     onClick={() => setDeleteConfirmId(null)}
-                                    className="p-1 text-gray-400 hover:text-white"
+                                    className="p-1 text-gray-400 hover:text-white disabled:opacity-50"
                                   >
                                     <XCircle className="w-3.5 h-3.5" />
                                   </button>
