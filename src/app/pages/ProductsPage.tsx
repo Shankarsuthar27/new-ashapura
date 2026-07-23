@@ -261,7 +261,6 @@ export const ProductsPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-2.5">
               {COLOR_OPTIONS.map(color => {
                 const isSelected = selectedColor === color;
-                const hexColor = COLOR_HEX_MAP[color];
 
                 return (
                   <button
@@ -276,12 +275,6 @@ export const ProductsPage: React.FC = () => {
                         : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50'
                     }`}
                   >
-                    {hexColor && (
-                      <span
-                        className="w-3 h-3 rounded-full border border-gray-300 shadow-sm"
-                        style={{ backgroundColor: hexColor }}
-                      />
-                    )}
                     <span>{color}</span>
                   </button>
                 );
