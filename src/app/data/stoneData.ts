@@ -27,6 +27,7 @@ export interface StoneSlab {
   };
 }
 
+
 export interface StoneCategory {
   id: string;
   name: 'Floor Tiles' | 'Wall Tiles' | 'Granite' | 'Marble' | 'Sanitary Items' | string;
