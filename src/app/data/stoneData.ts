@@ -93,7 +93,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     id: 'floor-tiles',
     name: 'Floor Tiles',
     tagline: 'Precision Vitrified Floor Surfaces',
-    description: 'High-definition vitrified tiles, carving vitrified surfaces, and large format architectural floor slabs engineered for high-traffic luxury spaces.',
+    description: 'Best Floor Tiles Available',
     image: './t1.jpeg',
     count: 140,
     keyFeatures: ['Stain & Scratch Proof', 'Vitrified Body Strength', 'Ideal for Living Rooms & Entrances']
@@ -103,7 +103,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     name: 'Wall Tiles',
     tagline: 'Artisan Ceramic & Decor Walls',
     description: 'Hand-glazed Moroccan zellige wall tiles, 3D ceramic accents, and high-gloss feature wall tiles designed for kitchens and bathrooms.',
-    image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=85',
+    image: './tiles.jpg',
     count: 115,
     keyFeatures: ['Glazed Color Depth', 'Water & Steam Impervious', 'Accent Walls & Backsplashes']
   },
@@ -111,8 +111,8 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     id: 'granite',
     name: 'Granite',
     tagline: 'Unyielding Geological Strength',
-    description: 'Formed under intense subterranean pressure over millennia. Extraordinary durability combined with complex crystalline mineral patterns.',
-    image: 'https://sudarshanstoneix.com/wp-content/uploads/2025/09/Baghera-Black-Lapatro.webp',
+    description: 'All Types of Granites in best quality',
+    image: './m1.jpeg',
     count: 98,
     keyFeatures: ['Scratch & Heat Resistant', 'Zero Water Permeability', 'High-Traffic Kitchen Countertops']
   },
@@ -121,7 +121,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     name: 'Marble',
     tagline: 'Timeless Italian & Greek Elegance',
     description: 'All Types of Marbles',
-    image: './m1.jpeg',
+    image: './g1.jpeg',
     count: 124,
     keyFeatures: ['Distinctive Veining', 'High Polish Luster', 'Ideal for Master Suites & Feature Walls']
   },
