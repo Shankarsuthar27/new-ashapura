@@ -1,45 +1,44 @@
 import React from 'react';
 import {
-  Crown,
-  Globe2,
-  Users,
-  Truck,
   Award,
   CircleDollarSign,
-  CheckCircle2
+  Sparkles,
+  Truck,
+  HeartHandshake,
+  Grid
 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const FEATURES = [
   {
-    icon: Crown,
-    title: 'Unrivaled Quality',
-    description: 'First-choice Grade A blocks hand-selected at Italian and Brazilian quarries by master petrographers.'
-  },
-  {
-    icon: Globe2,
-    title: 'Global Quarry Direct Sourcing',
-    description: 'Direct relationships with over 50 premier stone quarries across Italy, Greece, Spain, and Brazil.'
-  },
-  {
-    icon: Users,
-    title: 'Expert Stone Consultation',
-    description: 'Dedicated architectural stone consultants to assist with CAD layouts, slab selection, and book-matching.'
-  },
-  {
-    icon: Truck,
-    title: 'White-Glove Insured Delivery',
-    description: 'Specialized A-frame logistics transport guaranteeing zero damage from gallery to job site.'
-  },
-  {
     icon: Award,
-    title: 'Certified Authentic Materials',
-    description: 'Every slab comes with a certified Quality & Authenticity certificate detailing geological composition.'
+    title: 'Premium Quality Materials',
+    description: 'We offer high-quality tiles, granite, marble, and sanitary products sourced from trusted manufacturers to ensure durability and long-lasting performance.'
   },
   {
     icon: CircleDollarSign,
-    title: 'Competitive Direct Pricing',
-    description: 'Bypassing middlemen importers to offer direct quarry wholesale rates for residential & commercial builds.'
+    title: 'Affordable & Competitive Pricing',
+    description: 'Get the best value for your money with premium products at reasonable prices, suitable for both residential and commercial projects.'
+  },
+  {
+    icon: Sparkles,
+    title: 'Latest Designs & Wide Collection',
+    description: 'Explore a vast range of modern, classic, and luxury designs to match every style and space requirement.'
+  },
+  {
+    icon: Grid,
+    title: 'Wide Product Range',
+    description: 'A large collection of designs, colors, and finishes.'
+  },
+  {
+    icon: Truck,
+    title: 'Fast & Reliable Delivery',
+    description: 'We ensure timely delivery of products so your construction or renovation project stays on schedule.'
+  },
+  {
+    icon: HeartHandshake,
+    title: 'Trusted Customer Service',
+    description: 'Our experienced team provides expert guidance, personalized support, and a hassle-free buying experience from selection to delivery.'
   }
 ];
 
@@ -57,13 +56,13 @@ export const WhyChooseUs: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            The Aurelia Distinction
+            Ashapura granite
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
-            Why Discerning Architects & Designers Choose Us
+            Ashapura Granite has a large collection of designs.
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-base font-sans-luxury">
-            Combining generations of stone quarry heritage with modern 5-axis waterjet technology to deliver world-class natural stone solutions.
+            Architects & Designers Choose Us.
           </p>
         </div>
 
