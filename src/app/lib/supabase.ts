@@ -70,8 +70,8 @@ export async function fetchSupabaseSlabs(): Promise<StoneSlab[] | null> {
 /**
  * Add a new product/slab to Supabase table 'slabs'
  */
-export async function addSupabaseSlab(slab: StoneSlab): Promise<boolean> {
-  if (!supabase || !isSupabaseConfigured) return false;
+export async function addSupabaseSlab(slab: StoneSlab): Promise<{ success: boolean; error?: string }> {
+  if (!supabase || !isSupabaseConfigured) return { success: false, error: 'Supabase not configured' };
 
   try {
     const payload = {
@@ -102,28 +102,28 @@ export async function addSupabaseSlab(slab: StoneSlab): Promise<boolean> {
 
     if (error) {
       console.error('Failed to add product to Supabase:', error.message);
-      return false;
+      return { success: false, error: error.message };
     }
 
-    return true;
+    return { success: true };
   } catch (err) {
     console.error('Error adding product to Supabase:', err);
-    return false;
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 }
 
 /**
  * Update an existing product/slab in Supabase
  */
-export async function updateSupabaseSlab(slab: StoneSlab): Promise<boolean> {
+export async function updateSupabaseSlab(slab: StoneSlab): Promise<{ success: boolean; error?: string }> {
   return addSupabaseSlab(slab);
 }
 
 /**
  * Delete a product/slab from Supabase table 'slabs'
  */
-export async function deleteSupabaseSlab(id: string): Promise<boolean> {
-  if (!supabase || !isSupabaseConfigured) return false;
+export async function deleteSupabaseSlab(id: string): Promise<{ success: boolean; error?: string }> {
+  if (!supabase || !isSupabaseConfigured) return { success: false, error: 'Supabase not configured' };
 
   try {
     const { error } = await supabase
@@ -133,13 +133,13 @@ export async function deleteSupabaseSlab(id: string): Promise<boolean> {
 
     if (error) {
       console.error('Failed to delete product from Supabase:', error.message);
-      return false;
+      return { success: false, error: error.message };
     }
 
-    return true;
+    return { success: true };
   } catch (err) {
     console.error('Error deleting product from Supabase:', err);
-    return false;
+    return { success: false, error: err instanceof Error ? err.message : String(err) };
   }
 }
 

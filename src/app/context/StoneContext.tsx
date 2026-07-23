@@ -127,9 +127,9 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const addSlab = async (newSlab: StoneSlab) => {
     if (isSupabaseConfigured) {
-      const success = await addSupabaseSlab(newSlab);
+      const { success, error } = await addSupabaseSlab(newSlab);
       if (!success) {
-        throw new Error(`Failed to save ${newSlab.name} to database. See console for details.`);
+        throw new Error(`Failed to save ${newSlab.name} to database: ${error || 'Unknown error'}`);
       }
     }
     setSlabs(prev => [newSlab, ...prev]);
@@ -138,9 +138,9 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const updateSlab = async (updatedSlab: StoneSlab) => {
     if (isSupabaseConfigured) {
-      const success = await updateSupabaseSlab(updatedSlab);
+      const { success, error } = await updateSupabaseSlab(updatedSlab);
       if (!success) {
-        throw new Error(`Failed to update ${updatedSlab.name} in database. See console for details.`);
+        throw new Error(`Failed to update ${updatedSlab.name} in database: ${error || 'Unknown error'}`);
       }
     }
     setSlabs(prev => prev.map(item => (item.id === updatedSlab.id ? updatedSlab : item)));
@@ -149,9 +149,9 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const deleteSlab = async (id: string) => {
     if (isSupabaseConfigured) {
-      const success = await deleteSupabaseSlab(id);
+      const { success, error } = await deleteSupabaseSlab(id);
       if (!success) {
-        throw new Error('Failed to delete product from database. See console for details.');
+        throw new Error(`Failed to delete product from database: ${error || 'Unknown error'}`);
       }
     }
     setSlabs(prev => prev.filter(item => item.id !== id));
