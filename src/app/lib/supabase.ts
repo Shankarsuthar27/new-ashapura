@@ -197,8 +197,12 @@ export async function submitBooking(data: BookingData): Promise<BookingResult> {
     const functionsUrl = import.meta.env.VITE_SUPABASE_FUNCTIONS_URL || `${supabaseUrl}/functions/v1`;
     const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
+    const emailUrl = `${functionsUrl}/send-booking-email`;
+    console.log('[Email] Calling edge function:', emailUrl);
+    console.log('[Email] Payload:', { ...insertedRow });
+
     try {
-      const emailRes = await fetch(`${functionsUrl}/send-booking-email`, {
+      const emailRes = await fetch(emailUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -208,12 +212,19 @@ export async function submitBooking(data: BookingData): Promise<BookingResult> {
         body: JSON.stringify({ ...insertedRow }),
       });
 
+      console.log('[Email] Edge function HTTP status:', emailRes.status);
+
       if (!emailRes.ok) {
         const errBody = await emailRes.json().catch(() => ({}));
+        console.error('[Email] Edge function error response:', errBody);
         console.warn('Email send failed (booking still saved):', errBody);
         // Don't fail the whole submission — data is already saved
+      } else {
+        const okBody = await emailRes.json().catch(() => ({}));
+        console.log('[Email] Edge function success:', okBody);
       }
     } catch (emailErr) {
+      console.error('[Email] Could not reach edge function:', emailErr);
       console.warn('Could not reach email edge function (booking still saved):', emailErr);
     }
 

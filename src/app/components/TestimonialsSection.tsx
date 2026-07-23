@@ -36,7 +36,7 @@ export const TestimonialsSection: React.FC = () => {
         <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Project Photo (Left 6 cols) */}
-            <div className="lg:col-span-6 relative h-[320px] sm:h-[420px] rounded-2xl overflow-hidden bg-black shadow-xl">
+            <div className="lg:col-span-6 relative h-[320px] sm:h-[420px] rounded-2xl overflow-hidden bg-black">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={current.id}

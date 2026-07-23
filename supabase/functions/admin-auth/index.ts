@@ -3,6 +3,8 @@
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.8';
+// @ts-ignore — Deno supports npm: specifiers
+import nodemailer from 'npm:nodemailer@6.9.9';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -183,12 +185,13 @@ serve(async (req: Request) => {
 
       await logAuthEvent(user.username, 'otp_request');
 
-      // Send Email via Resend
-      const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
+      // Send Email via Gmail SMTP (nodemailer)
+      const GMAIL_FROM  = Deno.env.get('GMAIL_FROM_EMAIL') ?? 'ss2137789@gmail.com';
+      const GMAIL_PASS  = Deno.env.get('GMAIL_APP_PASSWORD');
       let emailSent = false;
       const targetEmail = user.email || 'ss2137789@gmail.com';
 
-      if (RESEND_API_KEY) {
+      if (GMAIL_PASS) {
         try {
           const emailHtml = `
 <!DOCTYPE html>
@@ -233,30 +236,25 @@ serve(async (req: Request) => {
 </body>
 </html>`;
 
-          const emailRes = await fetch('https://api.resend.com/emails', {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${RESEND_API_KEY}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              from: 'Ashapura Security <onboarding@resend.dev>',
-              to: [targetEmail],
-              subject: 'Admin Verification Code — Ashapura Tiles',
-              html: emailHtml,
-            }),
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: { user: GMAIL_FROM, pass: GMAIL_PASS },
           });
 
-          const data = await emailRes.json();
-          if (emailRes.ok) {
-            emailSent = true;
-            console.log(`OTP Email sent successfully to ${targetEmail}`);
-          } else {
-            console.error('Resend email delivery failed:', data);
-          }
+          const info = await transporter.sendMail({
+            from: `"Ashapura Security" <${GMAIL_FROM}>`,
+            to: targetEmail,
+            subject: 'Admin Verification Code — Ashapura Tiles',
+            html: emailHtml,
+          });
+
+          emailSent = true;
+          console.log(`OTP Email sent successfully to ${targetEmail}. MessageId: ${info.messageId}`);
         } catch (mailErr) {
-          console.error('Error calling Resend API:', mailErr);
+          console.error('Gmail SMTP error sending OTP:', String(mailErr));
         }
+      } else {
+        console.warn('GMAIL_APP_PASSWORD not set — skipping OTP email.');
       }
 
       // Send SMS

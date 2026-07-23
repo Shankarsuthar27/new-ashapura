@@ -32,7 +32,7 @@ export const BlogSection: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               onClick={() => setActiveArticle(article)}
-              className="group rounded-3xl overflow-hidden bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 shadow-xl transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between"
+              className="group rounded-3xl overflow-hidden bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between"
             >
               {/* Image Banner */}
               <div className="relative h-56 w-full overflow-hidden bg-black">

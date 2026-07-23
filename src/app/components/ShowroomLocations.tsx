@@ -34,7 +34,7 @@ export const ShowroomLocations: React.FC = () => {
             <div className="space-y-6">
 
               {/* Image Banner */}
-              <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-black shadow-xl">
+              <div className="relative h-64 sm:h-72 rounded-2xl overflow-hidden bg-black">
                 <img
                   src={showroom.image}
                   alt={showroom.title}

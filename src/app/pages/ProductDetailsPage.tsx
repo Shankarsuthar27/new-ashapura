@@ -40,7 +40,7 @@ export const ProductDetailsPage: React.FC = () => {
           <ArrowLeft className="w-4 h-4" /> Back to Full Slab Inventory
         </button>
 
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 lg:grid-cols-12">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
           {/* Left Visual Area */}
           <div className="lg:col-span-7 relative bg-[#0B0B0C] min-h-[450px] lg:min-h-[600px] flex items-center justify-center p-6 overflow-hidden">
             <motion.img
@@ -50,10 +50,10 @@ export const ProductDetailsPage: React.FC = () => {
               transition={{ duration: 0.5 }}
               src={showBookmatch && slab.bookmatchImage ? slab.bookmatchImage : slab.image}
               alt={slab.name}
-              className="w-full h-full object-cover rounded-2xl shadow-2xl"
+              className="w-full h-full object-cover rounded-2xl"
             />
             <div className="absolute top-6 left-6 flex flex-wrap gap-2">
-              <span className="px-3.5 py-1.5 rounded-full bg-[#C8A96A] text-black font-bold text-xs uppercase tracking-wider shadow-md">
+              <span className="px-3.5 py-1.5 rounded-full bg-[#C8A96A] text-black font-bold text-xs uppercase tracking-wider">
                 {slab.rarity}
               </span>
               <span className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md text-white border border-white/20 text-xs font-mono">
@@ -126,17 +126,17 @@ export const ProductDetailsPage: React.FC = () => {
                 <div className="flex flex-wrap gap-2">
                   {slab.finishes.map(finish => (
                     <button
-                      key={finish}
-                      onClick={() => setActiveFinish(finish)}
-                      className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
-                        activeFinish === finish
-                          ? 'bg-[#C8A96A] text-black shadow-md'
-                          : 'bg-gray-100 dark:bg-[#1A1A1F] text-gray-600 dark:text-gray-400 border border-transparent'
-                      }`}
-                    >
-                      {finish}
-                    </button>
-                  ))}
+                       key={finish}
+                       onClick={() => setActiveFinish(finish)}
+                       className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all ${
+                         activeFinish === finish
+                           ? 'bg-[#C8A96A] text-black'
+                           : 'bg-gray-100 dark:bg-[#1A1A1F] text-gray-600 dark:text-gray-400 border border-transparent'
+                       }`}
+                     >
+                       {finish}
+                     </button>
+                   ))}
                 </div>
               </div>
             </div>
@@ -173,7 +173,7 @@ export const ProductDetailsPage: React.FC = () => {
 
               <button
                 onClick={() => openConsultationWithSlab(slab)}
-                className="w-full py-4 rounded-xl gold-button text-xs font-bold uppercase tracking-widest shadow-xl flex items-center justify-center gap-2"
+                className="w-full py-4 rounded-xl gold-button text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-2"
               >
                 <span>Book Consultation For This Slab</span>
                 <ArrowUpRight className="w-4 h-4 text-black" />
@@ -183,7 +183,7 @@ export const ProductDetailsPage: React.FC = () => {
         </div>
 
         {/* Detailed Product Description & Architectural Specification Section */}
-        <div className="rounded-3xl overflow-hidden shadow-xl border border-gray-200 dark:border-gray-800 bg-white">
+        <div className="rounded-3xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white">
           <ProductDescriptionSection
             productName={slab.name}
             price={derivedPrice}

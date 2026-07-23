@@ -1,8 +1,19 @@
 // Supabase Edge Function: send-booking-email
-// Deno runtime — deploy with: npx supabase functions deploy send-booking-email --project-ref YOUR_REF
-// Set secrets:  npx supabase secrets set RESEND_API_KEY=re_xxx OWNER_EMAIL=you@gmail.com --project-ref YOUR_REF
+// Uses Gmail SMTP via nodemailer — no domain verification needed.
+//
+// Required Supabase secrets:
+//   GMAIL_APP_PASSWORD  — 16-char app password from Google Account → Security → App Passwords
+//   OWNER_EMAIL         — destination email (default: ss2137789@gmail.com)
+//   GMAIL_FROM_EMAIL    — sender Gmail address (default: ss2137789@gmail.com)
+//
+// Deploy:
+//   npx supabase functions deploy send-booking-email --project-ref cpmpyrliupmmsbvwcish
+// Set secrets:
+//   npx supabase secrets set GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx --project-ref cpmpyrliupmmsbvwcish
 
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
+// @ts-ignore — Deno supports npm: specifiers
+import nodemailer from 'npm:nodemailer@6.9.9';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -17,12 +28,16 @@ serve(async (req: Request) => {
   }
 
   try {
-    const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY');
-    const OWNER_EMAIL   = Deno.env.get('OWNER_EMAIL') ?? 'ss2137789@gmail.com';
+    const GMAIL_FROM     = Deno.env.get('GMAIL_FROM_EMAIL') ?? 'ss2137789@gmail.com';
+    const GMAIL_PASS     = Deno.env.get('GMAIL_APP_PASSWORD');
+    const OWNER_EMAIL    = Deno.env.get('OWNER_EMAIL')       ?? 'ss2137789@gmail.com';
 
-    if (!RESEND_API_KEY) {
+    console.log('[send-booking-email] FROM:', GMAIL_FROM, '→ TO:', OWNER_EMAIL);
+
+    if (!GMAIL_PASS) {
+      console.error('GMAIL_APP_PASSWORD secret is not set!');
       return new Response(
-        JSON.stringify({ error: 'RESEND_API_KEY secret is not configured on Supabase.' }),
+        JSON.stringify({ error: 'GMAIL_APP_PASSWORD secret is not configured on Supabase.' }),
         { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
       );
     }
@@ -45,6 +60,7 @@ serve(async (req: Request) => {
       ? new Date(created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
       : new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
 
+    // ── HTML Email Template ──────────────────────────────────────────────────
     const emailHtml = `
 <!DOCTYPE html>
 <html lang="en">
@@ -125,39 +141,33 @@ serve(async (req: Request) => {
 </body>
 </html>`;
 
-    // Call Resend API
-    const resendResponse = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
+    // ── Send via Gmail SMTP ──────────────────────────────────────────────────
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: GMAIL_FROM,
+        pass: GMAIL_PASS,   // 16-char Gmail App Password (NOT your Gmail login password)
       },
-      body: JSON.stringify({
-        from: 'Ashapura Bookings <onboarding@resend.dev>',
-        to: [OWNER_EMAIL],
-        reply_to: email,
-        subject: `New Booking Request — ${product || 'General Enquiry'} from ${name}`,
-        html: emailHtml,
-      }),
     });
 
-    const resendData = await resendResponse.json();
+    const mailOptions = {
+      from: `"Ashapura Bookings" <${GMAIL_FROM}>`,
+      to: OWNER_EMAIL,
+      replyTo: email || undefined,
+      subject: `🔔 New Booking — ${product || 'General Enquiry'} from ${name}`,
+      html: emailHtml,
+    };
 
-    if (!resendResponse.ok) {
-      console.error('Resend API error:', resendData);
-      return new Response(
-        JSON.stringify({ error: 'Failed to send email', details: resendData }),
-        { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
-      );
-    }
+    const info = await transporter.sendMail(mailOptions);
+    console.log('[send-booking-email] Email sent! MessageId:', info.messageId);
 
     return new Response(
-      JSON.stringify({ success: true, emailId: resendData.id }),
+      JSON.stringify({ success: true, messageId: info.messageId }),
       { status: 200, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }
     );
 
   } catch (err) {
-    console.error('Edge Function error:', err);
+    console.error('[send-booking-email] Error:', String(err));
     return new Response(
       JSON.stringify({ error: 'Internal server error', details: String(err) }),
       { status: 500, headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' } }

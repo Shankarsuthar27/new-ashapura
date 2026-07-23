@@ -34,7 +34,6 @@ export interface StoneCategory {
   description: string;
   image: string;
   count: number;
-  originCountries: string[];
   keyFeatures: string[];
 }
 
@@ -95,9 +94,8 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     name: 'Floor Tiles',
     tagline: 'Precision Vitrified Floor Surfaces',
     description: 'High-definition vitrified tiles, carving vitrified surfaces, and large format architectural floor slabs engineered for high-traffic luxury spaces.',
-    image: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=85',
+    image: './t1.jpeg',
     count: 140,
-    originCountries: ['Italy', 'Spain', 'India'],
     keyFeatures: ['Stain & Scratch Proof', 'Vitrified Body Strength', 'Ideal for Living Rooms & Entrances']
   },
   {
@@ -107,7 +105,6 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'Hand-glazed Moroccan zellige wall tiles, 3D ceramic accents, and high-gloss feature wall tiles designed for kitchens and bathrooms.',
     image: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=85',
     count: 115,
-    originCountries: ['Morocco', 'Spain', 'Italy'],
     keyFeatures: ['Glazed Color Depth', 'Water & Steam Impervious', 'Accent Walls & Backsplashes']
   },
   {
@@ -117,27 +114,24 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'Formed under intense subterranean pressure over millennia. Extraordinary durability combined with complex crystalline mineral patterns.',
     image: 'https://sudarshanstoneix.com/wp-content/uploads/2025/09/Baghera-Black-Lapatro.webp',
     count: 98,
-    originCountries: ['Brazil', 'India', 'Norway'],
     keyFeatures: ['Scratch & Heat Resistant', 'Zero Water Permeability', 'High-Traffic Kitchen Countertops']
   },
   {
     id: 'marble',
     name: 'Marble',
     tagline: 'Timeless Italian & Greek Elegance',
-    description: 'Renowned for dramatic veining and lustrous depths. Quarried in Carrara, Verona and Mt. Pentelicus for prestigious architectural masterpieces.',
-    image: 'https://sudarshanstoneix.com/wp-content/uploads/2025/09/Alpine-Grey-Marble.webp',
+    description: 'All Types of Marbles',
+    image: './m1.jpeg',
     count: 124,
-    originCountries: ['Italy', 'Greece', 'Spain'],
     keyFeatures: ['Distinctive Veining', 'High Polish Luster', 'Ideal for Master Suites & Feature Walls']
   },
   {
     id: 'sanitary-items',
     name: 'Sanitary Items',
     tagline: 'Luxury Showroom Sanitaryware & Fixtures',
-    description: 'High-density vitreous china toilets, freestanding stone composite tubs, ceramic basins, and designer sanitaryware for luxury bathrooms.',
-    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=85',
+    description: 'All Sanitary items',
+    image: './s.jpeg',
     count: 85,
-    originCountries: ['Germany', 'Italy', 'Switzerland'],
     keyFeatures: ['Antibacterial Glaze', 'Ultra-Quiet Flushing', 'Ergonomic Architectural Design']
   }
 ];

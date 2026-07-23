@@ -19,13 +19,15 @@ import {
 } from 'lucide-react';
 import { 
   loginAdmin, 
-  sendAdminOTP, 
-  verifyAdminOTP, 
-  resetAdminPassword, 
   isSupabaseConfigured,
   getAdminAuth,
   setAdminAuth
 } from '../lib/supabase';
+import {
+  requestPasswordResetOTP,
+  verifyPasswordResetOTP,
+  resetPasswordWithToken,
+} from '../lib/forgotPasswordApi';
 
 const ADMIN_USERNAME = 'admin2233';
 const ADMIN_PASSWORD = 'admin@2233';
@@ -147,20 +149,20 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
     setError('');
     setIsLoading(true);
 
-    if (!isSupabaseConfigured) {
-      setError('Database configuration is missing. Cannot request OTP.');
+    if (!forgotUserOrEmail.trim()) {
+      setError('Please enter your email address.');
       setIsLoading(false);
       return;
     }
 
     try {
-      const res = await sendAdminOTP(forgotUserOrEmail);
+      const res = await requestPasswordResetOTP(forgotUserOrEmail.trim());
       setIsLoading(false);
-      setOtpTimer(300); // Reset countdown to 5 mins
+      setOtpTimer(600); // 10 minutes to match backend TTL
       setFlowStep('forgot-otp');
-      triggerToast('success', res.message || 'A secure 6-digit code has been dispatched.');
+      triggerToast('success', res.message || 'A secure 6-digit code has been sent to the owner email.');
     } catch (err: any) {
-      setError(err.message || 'Failed to dispatch OTP. Check user profile.');
+      setError(err.message || 'Failed to send OTP. Please try again.');
       setIsLoading(false);
     }
   };
@@ -178,13 +180,13 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
     }
 
     try {
-      const res = await verifyAdminOTP(forgotUserOrEmail, enteredOtp);
+      const res = await verifyPasswordResetOTP(forgotUserOrEmail.trim(), enteredOtp.trim());
       setResetToken(res.reset_token);
       setIsLoading(false);
       setFlowStep('forgot-reset');
-      triggerToast('success', 'Verification complete. Update password below.');
+      triggerToast('success', 'Verification complete. Update your password below.');
     } catch (err: any) {
-      setError(err.message || 'OTP verification failed.');
+      setError(err.message || 'OTP verification failed. Please check the code and try again.');
       setIsLoading(false);
     }
   };
@@ -194,9 +196,9 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
     setError('');
     setIsLoading(true);
     try {
-      const res = await sendAdminOTP(forgotUserOrEmail);
+      const res = await requestPasswordResetOTP(forgotUserOrEmail.trim());
       setIsLoading(false);
-      setOtpTimer(300); // Reset timer
+      setOtpTimer(600); // Reset to 10 mins
       triggerToast('success', res.message || 'OTP code has been resent.');
     } catch (err: any) {
       setError(err.message || 'Failed to resend OTP.');
@@ -222,14 +224,16 @@ export const AdminLoginPage: React.FC<AdminLoginPageProps> = ({ onLoginSuccess }
 
     setIsLoading(true);
     try {
-      await resetAdminPassword(forgotUserOrEmail, resetToken, newPassword);
+      await resetPasswordWithToken(forgotUserOrEmail.trim(), resetToken, newPassword);
       setIsLoading(false);
       setFlowStep('login');
       setUsername(forgotUserOrEmail);
       setPassword('');
-      triggerToast('success', 'Password reset successfully.');
+      setForgotUserOrEmail('');
+      setResetToken('');
+      triggerToast('success', 'Password reset successfully. You can now log in.');
     } catch (err: any) {
-      setError(err.message || 'Password update failed.');
+      setError(err.message || 'Password update failed. Please try again.');
       setIsLoading(false);
     }
   };

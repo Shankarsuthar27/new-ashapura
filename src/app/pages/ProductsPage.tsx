@@ -327,7 +327,7 @@ export const ProductsPage: React.FC = () => {
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 }
                 }}
-                className="group bg-white rounded-[24px] border border-gray-200 shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                className="group bg-white rounded-[24px] border border-gray-200 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between"
               >
                 {/* Image Area with 4:3 Aspect Ratio & Hover Zoom */}
                 <div
@@ -353,7 +353,7 @@ export const ProductsPage: React.FC = () => {
                   </div>
 
                   {/* Price Tag Overlay */}
-                  <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-gray-200 shadow-lg text-right">
+                  <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-gray-200 text-right">
                     <span className="text-xs font-bold text-[#EF233C] block leading-none">
                       ₹{product.price.toFixed(2)}
                     </span>
@@ -369,7 +369,7 @@ export const ProductsPage: React.FC = () => {
                     {/* Color Indicator */}
                     <div className="flex items-center gap-2">
                       <span
-                        className="w-3 h-3 rounded-full border border-gray-300 shadow-sm"
+                        className="w-3 h-3 rounded-full border border-gray-300"
                         style={{ backgroundColor: COLOR_HEX_MAP[product.color] || '#6B7280' }}
                       />
                       <span className="text-xs font-semibold text-gray-500">
@@ -470,7 +470,7 @@ export const ProductsPage: React.FC = () => {
             {relatedProducts.map(rel => (
               <div
                 key={rel.id}
-                className="group bg-white rounded-[20px] border border-gray-200 p-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-[20px] border border-gray-200 p-4 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between"
               >
                 <div className="space-y-3">
                   <div

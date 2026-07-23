@@ -15,18 +15,18 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-[#0A0A0C]">
+    <section className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden">
       {/* Background Cinematic Visual */}
       <div className="absolute inset-0 z-0">
         <img
-          src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=95"
+          src="./main.jpeg"
           alt="Luxury Marble Slab Background"
-          className="w-full h-full object-cover scale-105 animate-pulse duration-[10000ms] opacity-40 brightness-75 contrast-125"
+          className="w-full h-full object-cover scale-105 animate-pulse duration-[10000ms] opacity-75 brightness-90 contrast-125"
         />
         {/* Dark Luxury Vignette Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/60 to-transparent" />
+        {/* <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0C] via-transparent to-[#0A0A0C]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#0A0A0C]/40 to-[#0A0A0C]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-transparent via-[#0A0A0C]/20 to-[#0A0A0C]" /> */}
       </div>
 
       {/* Floating Animated Gold Ambient Particles */}
@@ -51,7 +51,7 @@ export const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-serif-luxury text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.05]"
+          className="font-serif-luxury  text-5xl sm:text-7xl md:text-8xl font-bold tracking-tight text-gray-900 max-w-5xl mx-auto leading-[1.05]"
         >
           Ashapura Premium Tiles & Granite at Unbeatable Prices  test. <br />
           <span className="gold-gradient-text italic font-normal">Stone Collection</span>

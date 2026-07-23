@@ -1,6 +1,6 @@
 import React from 'react';
 import { STONE_CATEGORIES } from '../data/stoneData';
-import { ArrowUpRight, Globe, Layers, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Layers, Sparkles } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 
@@ -43,28 +43,21 @@ export const FeaturedCollections: React.FC = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: idx * 0.1 }}
               onClick={() => navigate(`/products?category=${encodeURIComponent(category.name)}`)}
-              className={`group relative rounded-3xl overflow-hidden bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 shadow-xl transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between ${
+              className={`group relative rounded-3xl overflow-hidden bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between ${
                 idx === 0 ? 'md:col-span-2 lg:col-span-2' : ''
               }`}
             >
               {/* Image Container with Zoom Effect */}
-              <div className="relative h-72 sm:h-80 w-full overflow-hidden bg-black">
+              <div className="relative h-[360px] sm:h-[440px] w-full overflow-hidden bg-black">
                 <img
                   src={category.image}
                   alt={category.name}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
 
                 {/* Count Badge */}
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white text-xs font-mono">
                   {category.count} Slabs In Stock
-                </div>
-
-                {/* Origins */}
-                <div className="absolute bottom-4 left-4 flex items-center gap-2 text-xs text-gray-300">
-                  <Globe className="w-3.5 h-3.5 text-[#C8A96A]" />
-                  <span>Quarried in {category.originCountries.join(', ')}</span>
                 </div>
               </div>
 

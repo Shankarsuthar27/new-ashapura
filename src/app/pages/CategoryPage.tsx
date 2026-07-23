@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { STONE_CATEGORIES, SLABS_DATA } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
-import { ArrowLeft, Sparkles, Globe, Eye, Package, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Sparkles, Eye, Package, ArrowUpRight, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const CategoryPage: React.FC = () => {
@@ -25,7 +25,7 @@ export const CategoryPage: React.FC = () => {
         </button>
 
         {/* Hero Header */}
-        <div className="relative rounded-3xl overflow-hidden bg-black text-white p-8 sm:p-16 shadow-2xl border border-[#C8A96A]/30">
+        <div className="relative rounded-3xl overflow-hidden bg-black text-white p-8 sm:p-16 border border-[#C8A96A]/30">
           <img
             src={category.image}
             alt={category.name}
@@ -46,9 +46,6 @@ export const CategoryPage: React.FC = () => {
 
             <div className="flex flex-wrap gap-4 pt-4 text-xs font-semibold text-gray-300">
               <span className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-white/20">
-                <Globe className="w-4 h-4 text-[#C8A96A]" /> Quarried in {category.originCountries.join(', ')}
-              </span>
-              <span className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-white/20">
                 <ShieldCheck className="w-4 h-4 text-[#C8A96A]" /> {categorySlabs.length} Certified Slab Bundles
               </span>
             </div>
@@ -56,7 +53,7 @@ export const CategoryPage: React.FC = () => {
         </div>
 
         {/* Category Key Features */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-8 shadow-xl space-y-4">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4">
           <h3 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
             {category.name} Key Performance Characteristics
           </h3>
@@ -83,10 +80,10 @@ export const CategoryPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="group bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-3xl overflow-hidden shadow-xl transition-all duration-500 hover:-translate-y-2 flex flex-col justify-between"
+                className="group bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 flex flex-col justify-between"
               >
                 <div
-                  className="relative h-64 w-full overflow-hidden bg-black cursor-pointer"
+                  className="relative h-80 sm:h-96 w-full overflow-hidden bg-black cursor-pointer"
                   onClick={() => setSelectedSlabForModal(slab)}
                 >
                   <img
