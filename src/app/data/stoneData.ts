@@ -318,55 +318,16 @@ export const SLABS_DATA: StoneSlab[] = [
 
 export const SHOWROOM_LOCATIONS: Showroom[] = [
   {
-    id: 'new-york',
-    city: 'New York',
-    title: '5th Avenue Design District Flagship',
-    address: '680 Fifth Avenue, Suite 1400, New York, NY 10019',
-    phone: '+1 (212) 890-4500',
+    id: 'Sirohi',
+    city: 'Sirohi',
+    title: 'Ashapura tiles & Granite',
+    address: 'Bhadriya Colony, Barloot Road, Kalandari, Sirohi (Rajasthan)',
+    phone: '+919974617657',
     email: 'ny.showroom@aureliamarmi.com',
-    hours: 'Mon - Fri: 9:00 AM - 6:00 PM | Sat: By Private Appointment',
-    mapEmbedUrl: 'https://maps.google.com/maps?q=680%20Fifth%20Avenue%20New%20York&t=&z=14&ie=UTF8&iwloc=&output=embed',
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=85',
-    coordinates: { lat: 40.7608, lng: -73.9754 },
-    virtualTourAvailable: true
-  },
-  {
-    id: 'milan',
-    city: 'Milan',
-    title: 'Via Montenapoleone Gallery & Studio',
-    address: 'Via Montenapoleone 18, 20121 Milano MI, Italy',
-    phone: '+39 02 7600 3411',
-    email: 'milan.atelier@aureliamarmi.com',
-    hours: 'Mon - Sat: 10:00 AM - 7:00 PM',
-    mapEmbedUrl: 'https://maps.google.com/maps?q=Via%20Montenapoleone%2018%20Milan&t=&z=14&ie=UTF8&iwloc=&output=embed',
-    image: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1000&q=85',
-    coordinates: { lat: 45.4682, lng: 9.1953 },
-    virtualTourAvailable: true
-  },
-  {
-    id: 'london',
-    city: 'London',
-    title: 'Mayfair Experience Center',
-    address: '42 Berkeley Square, Mayfair, London W1J 5AW, UK',
-    phone: '+44 20 7499 8200',
-    email: 'london.gallery@aureliamarmi.com',
-    hours: 'Mon - Fri: 9:30 AM - 6:30 PM | Sat: Appointment Only',
-    mapEmbedUrl: 'https://maps.google.com/maps?q=42%20Berkeley%20Square%20London&t=&z=14&ie=UTF8&iwloc=&output=embed',
-    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=85',
-    coordinates: { lat: 51.5098, lng: -0.1456 },
-    virtualTourAvailable: true
-  },
-  {
-    id: 'dubai',
-    city: 'Dubai',
-    title: 'DIFC Luxury Atelier',
-    address: 'Gate Precinct 4, Level 5, DIFC, Dubai, UAE',
-    phone: '+971 4 362 7000',
-    email: 'dubai.atelier@aureliamarmi.com',
-    hours: 'Sun - Thu: 9:00 AM - 8:00 PM',
-    mapEmbedUrl: 'https://maps.google.com/maps?q=DIFC%20Dubai&t=&z=14&ie=UTF8&iwloc=&output=embed',
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=85',
-    coordinates: { lat: 25.2048, lng: 55.2708 },
+    hours: '9:00 AM - 9:00 PM',
+    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4707.7037408102!2d72.68602150894596!3d24.934680330458725!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3943210077910b65%3A0x2247d600dd5e0d89!2sASHAPURA%20GRANITE%20%26%20TILES!5e0!3m2!1sen!2sin!4v1784791866363!5m2!1sen!2sin',
+    image: './main.jpeg',
+    coordinates: { lat: 24.9346803, lng: 72.6860215 },
     virtualTourAvailable: true
   }
 ];
@@ -397,7 +358,7 @@ export const PROCESS_STEPS: ProcessStep[] = [
     description: 'Collaborate with our master stone consultants and CAD engineers to map your project template digitally across your chosen slab bundles for flawless book-matching.',
     duration: 'Design Alignment',
     details: ['Digital CAD slab layout overlay', 'Book-match vein alignment preview', 'Quarry block reservation lock'],
-    icon: 'Sparkles'
+    icon: 'Compass'
   },
   {
     number: '04',

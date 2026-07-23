@@ -9,7 +9,6 @@ import {
   ChevronLeft,
   ChevronRight,
   SlidersHorizontal,
-  Sparkles,
   ArrowUpDown,
   X,
   PackageCheck,
@@ -345,11 +344,6 @@ export const ProductsPage: React.FC = () => {
                     <span className="px-3 py-1 rounded-full bg-[#0B1F44]/90 text-white font-bold text-[10px] uppercase tracking-wider backdrop-blur-md shadow-sm">
                       {product.category}
                     </span>
-                    {product.featured && (
-                      <span className=" px-3 py-0.5 rounded-full bg-[#] text-white font-bold text-[9px] uppercase tracking-wider inline-flex items-center gap-1 shadow-sm">
-                        <Sparkles className="w-1 h-1" /> 
-                      </span>
-                    )}
                   </div>
 
                   {/* Price Tag Overlay */}

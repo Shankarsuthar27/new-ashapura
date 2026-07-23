@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStone } from '../context/StoneContext';
-import { X, Sparkles, Package, Calendar, ShieldCheck, Check, Globe, Layers, ArrowUpRight } from 'lucide-react';
+import { X, Package, Calendar, ShieldCheck, Check, Globe, Layers, ArrowUpRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const SlabInspectorModal: React.FC = () => {
@@ -70,7 +70,6 @@ export const SlabInspectorModal: React.FC = () => {
               {slab.bookmatchImage && (
                 <div className="absolute bottom-5 left-5 right-5 flex justify-between items-center bg-black/60 backdrop-blur-md p-3 rounded-2xl border border-white/10">
                   <div className="flex items-center gap-2 text-xs text-gray-300">
-                    <Sparkles className="w-4 h-4 text-[#C8A96A]" />
                     <span>Book-Match Layout Preview</span>
                   </div>
                   <button

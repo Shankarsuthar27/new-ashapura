@@ -6,7 +6,6 @@ import {
   Truck,
   Award,
   CircleDollarSign,
-  Sparkles,
   CheckCircle2
 } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -58,7 +57,7 @@ export const WhyChooseUs: React.FC = () => {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> The Aurelia Distinction
+            The Aurelia Distinction
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
             Why Discerning Architects & Designers Choose Us

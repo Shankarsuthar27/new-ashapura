@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  ShieldCheck, MapPin, Layers, Award, Sparkles, Copy, Check,
+  ShieldCheck, MapPin, Layers, Award, Copy, Check,
   Calculator, ArrowRight, Share2, CheckCircle2, Gem, Ruler,
   Paintbrush, Package, Phone
 } from 'lucide-react';
@@ -124,7 +124,6 @@ export const ProductDescriptionSection: React.FC<StoneProductData> = ({
 
         {/* ── Eyebrow breadcrumb ───────────────────────────────────────────── */}
         <div className="flex items-center gap-2.5 mb-8">
-          <Sparkles className="w-3.5 h-3.5 text-[#C8A96A]" />
           <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#9A7B3E]">
             Premium Natural Stone Collection
           </span>

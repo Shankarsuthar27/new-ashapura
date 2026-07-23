@@ -6,7 +6,6 @@ import {
   ShoppingCart,
   PhoneCall,
   CheckCircle2,
-  Sparkles,
   MapPin,
   Layers,
   ShieldCheck,
@@ -111,7 +110,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 </span>
                 {product.featured && (
                   <span className="px-3 py-0.5 rounded-full bg-[#EF233C] text-white font-bold text-[10px] uppercase tracking-wider inline-flex items-center gap-1 shadow-md">
-                    <Sparkles className="w-3 h-3" /> Featured Collection
+                    Featured Collection
                   </span>
                 )}
               </div>

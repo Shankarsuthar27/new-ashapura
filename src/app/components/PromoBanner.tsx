@@ -1,5 +1,4 @@
 import { motion } from 'motion/react';
-import { Sparkles } from 'lucide-react';
 
 export function PromoBanner() {
   return (
@@ -19,7 +18,6 @@ export function PromoBanner() {
           <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="text-center md:text-left">
               <div className="flex items-center gap-2 justify-center md:justify-start mb-4">
-                <Sparkles className="w-6 h-6 text-yellow-300" />
                 <span className="text-yellow-300 font-semibold uppercase tracking-wide text-sm">
                   Special Offer
                 </span>

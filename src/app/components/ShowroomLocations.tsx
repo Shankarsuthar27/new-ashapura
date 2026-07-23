@@ -43,7 +43,7 @@ export const ShowroomLocations: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <span className="px-3 py-1 rounded-full bg-[#C8A96A] text-black font-semibold text-[10px] uppercase tracking-wider">
-                    Flagship Studio
+                    Ashapura tiles & granite
                   </span>
                   <h3 className="font-serif-luxury text-2xl font-bold mt-1">
                     {showroom.title}

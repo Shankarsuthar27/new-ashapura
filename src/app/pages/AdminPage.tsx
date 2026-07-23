@@ -8,7 +8,6 @@ import {
   Search,
   Package,
   Layers,
-  Sparkles,
   RefreshCw,
   CheckCircle2,
   XCircle,

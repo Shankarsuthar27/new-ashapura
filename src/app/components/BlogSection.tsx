@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { BLOG_ARTICLES, BlogArticle } from '../data/stoneData';
-import { Sparkles, Clock, Calendar, User, ArrowRight, X, BookOpen } from 'lucide-react';
+import { Clock, Calendar, User, ArrowRight, X, BookOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const BlogSection: React.FC = () => {
@@ -12,7 +12,7 @@ export const BlogSection: React.FC = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> Architectural Journal & Insights
+            Architectural Journal & Insights
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
             Stone & Interior Journal

@@ -9,7 +9,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  Sparkles,
   ShieldCheck,
   ArrowUpRight
 } from 'lucide-react';

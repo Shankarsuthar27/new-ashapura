@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStone } from '../context/StoneContext';
-import { ArrowRight, Sparkles, Award, Layers, ShieldCheck, ChevronDown } from 'lucide-react';
+import { ArrowRight, Award, Layers, ShieldCheck, ChevronDown } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 

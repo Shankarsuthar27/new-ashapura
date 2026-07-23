@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { STONE_CATEGORIES, SLABS_DATA } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
-import { ArrowLeft, Sparkles, Eye, Package, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Eye, Package, ArrowUpRight, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const CategoryPage: React.FC = () => {
@@ -60,7 +60,6 @@ export const CategoryPage: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {category.keyFeatures.map((feat, i) => (
               <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-[#1A1A1E] border border-gray-200 dark:border-gray-800">
-                <Sparkles className="w-5 h-5 text-[#C8A96A] shrink-0" />
                 <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{feat}</span>
               </div>
             ))}

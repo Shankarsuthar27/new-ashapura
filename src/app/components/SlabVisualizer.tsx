@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SLABS_DATA, StoneSlab } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
-import { Eye, Layers, Sun, Sparkles, Check, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Eye, Layers, Sun, Check, ArrowRight, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 
 const ROOM_PRESETS = [
@@ -49,7 +49,6 @@ export const SlabVisualizer: React.FC = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C8A96A]/10 border border-[#C8A96A]/30 text-[#C8A96A] text-xs uppercase tracking-widest font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
             <span>Interactive Architectural Tool</span>
           </div>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { SLABS_DATA } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
-import { ArrowLeft, Sparkles, Package, Calendar, ShieldCheck, Check, Globe, Layers, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, Package, Calendar, ShieldCheck, Check, Globe, Layers, ArrowUpRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ProductDescriptionSection } from '../components/ProductDescriptionSection';
 
@@ -64,7 +64,7 @@ export const ProductDetailsPage: React.FC = () => {
             {slab.bookmatchImage && (
               <div className="absolute bottom-6 left-6 right-6 flex items-center justify-between bg-black/70 backdrop-blur-md p-3 rounded-2xl border border-white/20">
                 <span className="text-xs text-gray-300 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4 text-[#C8A96A]" /> Book-Match Preview
+                  Book-Match Preview
                 </span>
                 <button
                   onClick={() => setShowBookmatch(!showBookmatch)}

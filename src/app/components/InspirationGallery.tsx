@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { INSPIRATION_GALLERY, InspirationItem } from '../data/stoneData';
-import { Sparkles, Maximize2, X, MapPin, Building2, Calendar } from 'lucide-react';
+import { Maximize2, X, MapPin, Building2, Calendar } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export const InspirationGallery: React.FC = () => {
@@ -19,7 +19,7 @@ export const InspirationGallery: React.FC = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> Architectural Showcase
+            Architectural Showcase
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
             Inspiration Gallery

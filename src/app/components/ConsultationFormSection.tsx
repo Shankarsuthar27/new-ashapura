@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useStone } from '../context/StoneContext';
 import { submitBooking, type BookingData, isSupabaseConfigured } from '../lib/supabase';
 import {
-  Sparkles, Clock, Send, CheckCircle2, ShieldCheck,
+  Clock, Send, CheckCircle2, ShieldCheck,
   PhoneCall, Mail, Loader2, AlertCircle, MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -316,7 +316,7 @@ export const ConsultationFormSection: React.FC = () => {
             <div className="lg:col-span-5 space-y-8">
               <div className="space-y-4">
                 <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" /> Book a Consultation
+                  Book a Consultation
                 </span>
                 <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
                   Get in Touch With Us

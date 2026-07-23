@@ -1,6 +1,6 @@
 import React from 'react';
 import { STONE_CATEGORIES } from '../data/stoneData';
-import { ArrowUpRight, Layers, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Layers } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 
@@ -14,13 +14,13 @@ export const FeaturedCollections: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
           <div className="space-y-3 max-w-2xl">
             <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold flex items-center gap-2">
-              <Sparkles className="w-4 h-4" /> Architectural Masterpieces
+              Architectural Masterpieces
             </span>
             <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
               Featured Stone Collections
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-base font-sans-luxury">
-              Hand-selected natural marble, granite, engineered quartz, exotics, and sintered porcelain slabs quarried globally.
+              Natural marble, granite, engineered quartz, exotics, and sintered porcelain slabs quarried globally.
             </p>
           </div>
 

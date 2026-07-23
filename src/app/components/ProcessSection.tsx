@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PROCESS_STEPS } from '../data/stoneData';
-import { Sparkles, Compass, PackageCheck, Hammer, ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Compass, PackageCheck, Hammer, ShieldCheck, CheckCircle2, ArrowRight, Users } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const ProcessSection: React.FC = () => {
@@ -10,10 +10,10 @@ export const ProcessSection: React.FC = () => {
     switch (index) {
       case 0: return Compass;
       case 1: return PackageCheck;
-      case 2: return Sparkles;
+      case 2: return Users;
       case 3: return Hammer;
       case 4: return ShieldCheck;
-      default: return Sparkles;
+      default: return Compass;
     }
   };
 
@@ -23,7 +23,7 @@ export const ProcessSection: React.FC = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            <Sparkles className="w-4 h-4" /> End-To-End Master Craftsmen Journey
+            End-To-End Master Craftsmen Journey
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
             Our 5-Step Precision Process

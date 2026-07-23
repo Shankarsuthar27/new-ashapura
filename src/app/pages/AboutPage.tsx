@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Globe, Award, ShieldCheck, Users, Compass } from 'lucide-react';
+import { Globe, Award, ShieldCheck, Users, Compass } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 
@@ -12,7 +12,7 @@ export const AboutPage: React.FC = () => {
         {/* Banner */}
         <div className="bg-[#111114] border border-[#C8A96A]/30 rounded-3xl p-8 sm:p-16 text-white text-center space-y-4 shadow-2xl relative overflow-hidden">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#C8A96A]/10 border border-[#C8A96A]/30 text-[#C8A96A] text-xs font-semibold uppercase tracking-widest">
-            <Sparkles className="w-3.5 h-3.5" /> 25+ Years Of Italian Heritage
+            25+ Years Of Italian Heritage
           </div>
           <h1 className="font-serif-luxury text-4xl sm:text-7xl font-bold tracking-tight">
             Quarrying Earth’s Fine Art
