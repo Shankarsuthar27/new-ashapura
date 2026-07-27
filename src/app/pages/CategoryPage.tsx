@@ -109,6 +109,32 @@ export const CategoryPage: React.FC = () => {
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
                       {slab.description}
                     </p>
+                    {slab.longDescription && (
+                      <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-3 leading-relaxed italic border-l-2 border-[#C8A96A]/30 pl-2">
+                        {slab.longDescription}
+                      </p>
+                    )}
+
+                    {slab.specifications && (
+                      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 grid grid-cols-2 gap-x-4 gap-y-2 text-[10px]">
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Comp. Strength</span>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.compressiveStrength}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Water Absorption</span>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.waterAbsorption}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Density</span>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.density}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Flex. Strength</span>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.flexuralStrength}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-800 grid grid-cols-2 gap-2">

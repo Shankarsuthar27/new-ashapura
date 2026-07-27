@@ -9,7 +9,7 @@ export const TestimonialsSection: React.FC = () => {
   const handlePrev = () => {
     setCurrentIndex(prev => (prev === 0 ? TESTIMONIALS_DATA.length - 1 : prev - 1));
   };
-
+  
   const handleNext = () => {
     setCurrentIndex(prev => (prev === TESTIMONIALS_DATA.length - 1 ? 0 : prev + 1));
   };
@@ -22,13 +22,13 @@ export const TestimonialsSection: React.FC = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
           <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-            Endorsements From Industry Leaders
+            
           </span>
           <h2 className="font-serif-luxury text-4xl sm:text-5xl font-bold tracking-tight">
-            Client & Architect Testimonials
+            Client Reviews and Feedback
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-base font-sans-luxury">
-            Hear from world-renowned architectural firms, luxury interior designers, and estate owners who rely on Aurelia Marmi.
+            Hear from our happy customers who trust Ashapura Tiles & Granite for quality products, great service, and reliable support.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ export const TestimonialsSection: React.FC = () => {
         <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Project Photo (Left 6 cols) */}
-            <div className="lg:col-span-6 relative h-[320px] sm:h-[420px] rounded-2xl overflow-hidden bg-black">
+            <div className="lg:col-span-6 relative h-[320px] sm:h-[420px] rounded-2xl overflow-hidden bg-black"> 
               <AnimatePresence mode="wait">
                 <motion.img
                   key={current.id}
@@ -86,11 +86,7 @@ export const TestimonialsSection: React.FC = () => {
 
               {/* Author Bio */}
               <div className="flex items-center gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-                <img
-                  src={current.image}
-                  alt={current.clientName}
-                  className="w-14 h-14 rounded-full object-cover border-2 border-[#C8A96A]"
-                />
+                
                 <div>
                   <h4 className="font-serif-luxury font-bold text-lg text-gray-900 dark:text-white">
                     {current.clientName}

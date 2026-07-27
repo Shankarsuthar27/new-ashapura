@@ -33,13 +33,68 @@ export const SampleDrawer: React.FC = () => {
       showToast('Please fill in required shipping fields.', 'info');
       return;
     }
+
+    // 1. Gather all order information
+    const orderId = 'ORDER-' + Date.now().toString(36).toUpperCase();
+    const orderData = {
+      id: orderId,
+      date: new Date().toLocaleString(),
+      name: formData.name,
+      email: formData.email,
+      company: formData.company || '',
+      address: formData.address,
+      city: formData.city || '',
+      zip: formData.zip || '',
+      notes: formData.notes || '',
+      chips: sampleCart.map(item => ({
+        id: item.id,
+        name: item.name,
+        category: item.category,
+        origin: item.origin,
+        image: item.image
+      }))
+    };
+
+    // 2. Store in local storage admin database before opening WhatsApp
+    try {
+      const existing = localStorage.getItem('ashapura_sample_orders');
+      const orders = existing ? JSON.parse(existing) : [];
+      orders.unshift(orderData);
+      localStorage.setItem('ashapura_sample_orders', JSON.stringify(orders));
+    } catch (err) {
+      console.error('Failed to store order in local storage admin database:', err);
+    }
+
+    // 3. Format WhatsApp Message
+    const chipsList = sampleCart.map((item, idx) => `• ${item.name} (${item.category})`).join('\n');
+    const messageText = `Hi Ashapura Granite, I would like to order a complimentary Luxury Sample Box.
+
+*Shipping Details:*
+• Name: ${formData.name}
+• Email: ${formData.email}
+• Address: ${formData.address}
+• City: ${formData.city || 'N/A'}
+• ZIP: ${formData.zip || 'N/A'}
+${formData.notes ? `• Notes: ${formData.notes}\n` : ''}
+*Selected Stone Chips:*
+${chipsList}
+
+Order ID: ${orderId}
+Thank you!`;
+
+    const whatsappUrl = `https://wa.me/919974617657?text=${encodeURIComponent(messageText)}`;
+
+    // 4. Trigger dispatch animations and open WhatsApp
     setIsSubmitted(true);
     setTimeout(() => {
-      showToast('Sample request order confirmed! Dispatching in luxury presentation box.', 'success');
+      showToast('Sample request saved! Opening WhatsApp...', 'success');
       clearSampleCart();
       setIsSubmitted(false);
       setIsSampleDrawerOpen(false);
-    }, 2000);
+      
+      // Open WhatsApp in new tab
+      window.open(whatsappUrl, '_blank');
+    }, 1500);
   };
 
   return (

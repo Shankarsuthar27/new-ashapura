@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Award,
   CircleDollarSign,
-  Sparkles,
+  Palette,
   Truck,
   HeartHandshake,
   Grid
@@ -21,7 +21,7 @@ const FEATURES = [
     description: 'Get the best value for your money with premium products at reasonable prices, suitable for both residential and commercial projects.'
   },
   {
-    icon: Sparkles,
+    icon: Palette,
     title: 'Latest Designs & Wide Collection',
     description: 'Explore a vast range of modern, classic, and luxury designs to match every style and space requirement.'
   },

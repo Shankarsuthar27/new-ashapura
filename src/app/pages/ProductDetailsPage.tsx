@@ -43,15 +43,17 @@ export const ProductDetailsPage: React.FC = () => {
         <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl overflow-hidden grid grid-cols-1 lg:grid-cols-12">
           {/* Left Visual Area */}
           <div className="lg:col-span-7 relative bg-[#0B0B0C] min-h-[450px] lg:min-h-[600px] flex items-center justify-center p-6 overflow-hidden">
-            <motion.img
-              key={showBookmatch ? 'bm' : 'single'}
-              initial={{ opacity: 0.6, scale: 1.02 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              src={showBookmatch && slab.bookmatchImage ? slab.bookmatchImage : slab.image}
-              alt={slab.name}
-              className="w-full h-full object-cover rounded-2xl"
-            />
+            <div className="w-full h-full overflow-hidden rounded-2xl">
+              <motion.img
+                key={showBookmatch ? 'bm' : 'single'}
+                initial={{ opacity: 0.6, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                src={showBookmatch && slab.bookmatchImage ? slab.bookmatchImage : slab.image}
+                alt={slab.name}
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105 cursor-zoom-in"
+              />
+            </div>
             <div className="absolute top-6 left-6 flex flex-wrap gap-2">
               <span className="px-3.5 py-1.5 rounded-full bg-[#C8A96A] text-black font-bold text-xs uppercase tracking-wider">
                 {slab.rarity}
@@ -111,6 +113,14 @@ export const ProductDetailsPage: React.FC = () => {
                   <div>
                     <span className="text-gray-400 block">Water Absorption</span>
                     <span className="font-medium">{slab.specifications.waterAbsorption}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block">Density</span>
+                    <span className="font-medium">{slab.specifications.density}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-400 block">Flexural Strength</span>
+                    <span className="font-medium">{slab.specifications.flexuralStrength}</span>
                   </div>
                 </div>
               </div>

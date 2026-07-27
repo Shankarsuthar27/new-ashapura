@@ -1,31 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStone } from '../context/StoneContext';
 import { StoneSlab } from '../data/stoneData';
 import {
-  Plus,
-  Trash2,
-  Edit3,
-  Search,
-  Package,
-  Layers,
-  CheckCircle2,
-  XCircle,
-  Image as ImageIcon,
-  ShieldAlert,
-  Grid,
-  List,
-  ChevronRight,
-  Boxes,
-  Compass,
-  LogOut,
-  Upload,
-  X,
-  Loader2,
-  AlertCircle
+  LayoutDashboard, List, Plus, ClipboardList, ShieldAlert,
+  Layers, Calendar, Users, Globe, Image as ImageIcon,
+  Settings, LogOut, ChevronLeft, ChevronRight, Bell,
+  Volume2, VolumeX, Command, Menu, X, CheckCircle2,
+  Trash2, Edit3, Loader2, AlertCircle, Sparkles, Folder
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AdminLoginPage } from './AdminLoginPage';
 import { uploadProductImage, getAdminAuth, setAdminAuth } from '../lib/supabase';
+
+// Subcomponents
+import { DashboardView } from '../components/admin/DashboardView';
+import { ProductManagementView } from '../components/admin/ProductManagementView';
+import { InventoryView } from '../components/admin/InventoryView';
+import { CategoriesBrandsView } from '../components/admin/CategoriesBrandsView';
+import { ContactBookingsView } from '../components/admin/ContactBookingsView';
+import { SEOPanelView } from '../components/admin/SEOPanelView';
+import { AuditLogsView } from '../components/admin/AuditLogsView';
+import { SettingsView } from '../components/admin/SettingsView';
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -64,47 +59,119 @@ function compressImage(file: File): Promise<string> {
   });
 }
 
-
-// Preset luxury image URLs for quick selection in the form
 const PRESET_IMAGES = [
-  {
-    name: 'Italian White Marble',
-    category: 'Marble',
-    url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'
-  },
-  {
-    name: 'Black Gold Granite',
-    category: 'Granite',
-    url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85'
-  },
-  {
-    name: 'Statuario Carving Floor Tile',
-    category: 'Floor Tiles',
-    url: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=85'
-  },
-  {
-    name: 'Moroccan Zellige Wall Tile',
-    category: 'Wall Tiles',
-    url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=85'
-  },
-  {
-    name: 'Nordic Stone Sanitary Tub',
-    category: 'Sanitary Items',
-    url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=85'
-  }
+  { name: 'Italian White Marble', category: 'Marble', url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Black Gold Granite', category: 'Granite', url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Statuario Carving Floor Tile', category: 'Floor Tiles', url: 'https://images.unsplash.com/photo-1615529182904-14819c35db37?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Moroccan Zellige Wall Tile', category: 'Wall Tiles', url: 'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=85' },
+  { name: 'Nordic Stone Sanitary Tub', category: 'Sanitary Items', url: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=85' }
 ];
 
 export const AdminPage: React.FC = () => {
   const { slabs, addSlab, updateSlab, deleteSlab } = useStone();
 
-  // --- ALL HOOKS MUST BE DECLARED BEFORE ANY CONDITIONAL RETURN ---
+  // Authentication & Navigation Tabs
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => getAdminAuth());
-  const [activeTab, setActiveTab] = useState<'inventory' | 'add'>('inventory');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [activeTab, setActiveTab] = useState<
+    'dashboard' | 'inventory' | 'add' | 'stock' | 'categories' | 'bookings' | 'users' | 'seo' | 'media' | 'logs' | 'settings'
+  >('dashboard');
+
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+
+  // Command Palette
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
+  const [commandQuery, setCommandQuery] = useState('');
+
+  // Notifications Drawer
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 'n1', text: 'New consultation booking from Kabir Dev.', time: '5 mins ago', read: false },
+    { id: 'n2', text: 'Low stock warning: Statuario Tiles under 5 boxes.', time: '1 hour ago', read: false },
+    { id: 'n3', text: 'Daily catalog backup synced successfully.', time: '3 hours ago', read: true }
+  ]);
+
   const [editingSlab, setEditingSlab] = useState<StoneSlab | null>(null);
-  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+
+  // Sample Orders (localStorage Database fallback)
+  const [sampleOrders, setSampleOrders] = useState<any[]>(() => {
+    try {
+      const saved = localStorage.getItem('ashapura_sample_orders');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  // Hotkey hook for Ctrl + K
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        setShowCommandPalette(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  // Sync sample orders
+  useEffect(() => {
+    if (activeTab === 'bookings') {
+      try {
+        const saved = localStorage.getItem('ashapura_sample_orders');
+        setSampleOrders(saved ? JSON.parse(saved) : []);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [activeTab]);
+
+  // Web Audio Synth Chime
+  const playNotificationSound = () => {
+    if (!soundEnabled) return;
+    try {
+      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
+
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
+
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.35);
+    } catch (err) {
+      console.warn('AudioContext failed:', err);
+    }
+  };
+
+  // Add Notification
+  const triggerNotification = (text: string) => {
+    setNotifications(prev => [
+      { id: Math.random().toString(36).substring(2, 9), text, time: 'Just now', read: false },
+      ...prev
+    ]);
+    playNotificationSound();
+  };
+
+  const handleDeleteOrder = (orderId: string) => {
+    if (confirm('Are you sure you want to delete this sample order record?')) {
+      const updated = sampleOrders.filter(o => o.id !== orderId);
+      setSampleOrders(updated);
+      try {
+        localStorage.setItem('ashapura_sample_orders', JSON.stringify(updated));
+        triggerNotification('Sample request deleted.');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  };
 
   // Form State for Adding / Editing
   const initialFormState: Partial<StoneSlab> = {
@@ -162,20 +229,17 @@ export const AdminPage: React.FC = () => {
       if (publicUrl) {
         setFormData(prev => ({ ...prev, image: publicUrl }));
       } else {
-        // Fallback to local canvas base64 compression for offline/demo usage
         const base64Data = await compressImage(file);
         setFormData(prev => ({ ...prev, image: base64Data }));
       }
     } catch (err) {
-      console.error('File read/upload error:', err);
+      console.error('File upload error:', err);
       setUploadError('Failed to read or upload image.');
     } finally {
       setIsUploading(false);
     }
   };
 
-
-  // --- AUTH GUARD (safe: all hooks already declared above) ---
   const handleLogout = () => {
     setAdminAuth(false);
     setIsAuthenticated(false);
@@ -184,31 +248,6 @@ export const AdminPage: React.FC = () => {
   if (!isAuthenticated) {
     return <AdminLoginPage onLoginSuccess={() => setIsAuthenticated(true)} />;
   }
-  // -----------------------------------------------------------
-
-  // Stats
-  const totalSlabs = slabs.length;
-  const tilesCount = slabs.filter(s => s.category.toLowerCase() === 'tiles').length;
-  const graniteCount = slabs.filter(s => s.category.toLowerCase() === 'granite').length;
-  const marbleCount = slabs.filter(s => s.category.toLowerCase() === 'marble').length;
-  const totalStock = slabs.reduce((acc, s) => acc + (s.inStockSlabs || 0), 0);
-
-  // Filtered inventory
-  const filteredSlabs = slabs.filter(s => {
-    if (selectedCategory !== 'All' && s.category.toLowerCase() !== selectedCategory.toLowerCase()) {
-      return false;
-    }
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase();
-      return (
-        s.name.toLowerCase().includes(q) ||
-        s.color.toLowerCase().includes(q) ||
-        s.origin.toLowerCase().includes(q) ||
-        s.category.toLowerCase().includes(q)
-      );
-    }
-    return true;
-  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -255,9 +294,11 @@ export const AdminPage: React.FC = () => {
     try {
       if (editingSlab) {
         await updateSlab(slabToSave);
+        triggerNotification(`Updated "${slabToSave.name}" successfully.`);
         setEditingSlab(null);
       } else {
         await addSlab(slabToSave);
+        triggerNotification(`Published "${slabToSave.name}" to live inventory.`);
         setFormData(initialFormState);
       }
       setActiveTab('inventory');
@@ -273,7 +314,6 @@ export const AdminPage: React.FC = () => {
     setEditingSlab(slab);
     setFormData(slab);
     setActiveTab('add');
-    window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 
   const cancelEdit = () => {
@@ -282,632 +322,651 @@ export const AdminPage: React.FC = () => {
     setActiveTab('inventory');
   };
 
+  // Commands lookup for Ctrl+K Palette
+  const navigationCommands = [
+    { name: 'Dashboard Analytics', tab: 'dashboard' },
+    { name: 'Live Slabs List', tab: 'inventory' },
+    { name: 'Add Stone Product', tab: 'add' },
+    { name: 'Stock Margin Analysis', tab: 'stock' },
+    { name: 'Nested Categories & Brands', tab: 'categories' },
+    { name: 'Bookings & Sample Orders', tab: 'bookings' },
+    { name: 'SEO & Search Engine Snippets', tab: 'seo' },
+    { name: 'Activity Trail Logs', tab: 'logs' },
+    { name: 'Portal Website Settings', tab: 'settings' }
+  ];
+
+  const filteredCommands = navigationCommands.filter(cmd =>
+    cmd.name.toLowerCase().includes(commandQuery.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen bg-[#F8F8F8] dark:bg-[#0A0A0C] text-gray-900 dark:text-gray-100 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-10">
-        {/* Header Banner */}
-        <div className="bg-[#111114] border border-[#C8A96A]/40 rounded-3xl p-8 sm:p-10 shadow-2xl text-white relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="relative z-10 space-y-2 max-w-2xl">
-            <span className="text-xs uppercase tracking-widest text-[#C8A96A] font-bold inline-flex items-center gap-2">
-              <Boxes className="w-4 h-4" /> Admin Inventory Control Portal
-            </span>
-            <h1 className="font-serif-luxury text-3xl sm:text-5xl font-bold tracking-tight">
-              Product & Slab Catalog Management
-            </h1>
-            <p className="text-gray-300 text-sm font-sans-luxury">
-              Add and manage live inventory for <span className="text-[#C8A96A] font-bold">Tiles</span>, <span className="text-[#C8A96A] font-bold">Granites</span>, <span className="text-[#C8A96A] font-bold">Marbles</span>, and Exotic Stone Slabs.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3 z-10">
+    <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0A0A0C] text-gray-900 dark:text-[#E5E5E7] flex flex-row overflow-hidden font-sans-luxury">
+      
+      {/* ───────────────── COLLAPSIBLE SIDEBAR ───────────────── */}
+      <aside className={`border-r border-gray-250 dark:border-gray-800/80 bg-white dark:bg-[#0F0F12] flex flex-col justify-between transition-all duration-300 z-30 shrink-0 ${
+        isSidebarCollapsed ? 'w-20' : 'w-64'
+      }`}>
+        <div className="flex flex-col flex-1 overflow-y-auto">
+          {/* Logo Brand Title */}
+          <div className="p-6 border-b border-gray-200 dark:border-gray-800/80 flex items-center justify-between">
+            {!isSidebarCollapsed && (
+              <span className="font-serif-luxury text-base font-bold tracking-tight text-[#C8A96A] truncate">
+                ASHAPURA ATELIER
+              </span>
+            )}
             <button
-              onClick={() => {
-                setEditingSlab(null);
-                setFormData(initialFormState);
-                setActiveTab(activeTab === 'add' ? 'inventory' : 'add');
-              }}
-              className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#DFBA73] via-[#C8A96A] to-[#8C6D2B] text-black text-xs font-bold uppercase tracking-wider shadow-lg hover:brightness-110 transition-all flex items-center gap-2"
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 mx-auto"
             >
-              {activeTab === 'add' ? (
-                <>
-                  <List className="w-4 h-4" /> View Inventory List
-                </>
-              ) : (
-                <>
-                  <Plus className="w-4 h-4" /> Add New Product (Tiles / Granite / Marble)
-                </>
-              )}
-            </button>
-
-            <button
-              onClick={() => {
-                if (confirm('Are you sure you want to log out of the admin panel?')) {
-                  handleLogout();
-                }
-              }}
-              title="Logout from admin panel"
-              className="px-4 py-3 rounded-xl border border-gray-700 hover:border-orange-500 hover:text-orange-400 text-xs font-semibold text-gray-300 transition-colors flex items-center gap-2"
-            >
-              <LogOut className="w-4 h-4" /> Logout
+              {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
             </button>
           </div>
+
+          {/* Navigation Items */}
+          <nav className="p-4 space-y-1">
+            {[
+              { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+              { id: 'inventory', label: 'Live Inventory', icon: List },
+              { id: 'add', label: 'Add New Product (Tiles / Granite / Marble)', icon: Plus },
+              { id: 'stock', label: 'Stock & Margin', icon: ClipboardList },
+              { id: 'categories', label: 'Categories & Brands', icon: Layers },
+              { id: 'bookings', label: 'Bookings & Orders', icon: Calendar },
+              { id: 'seo', label: 'SEO Manager', icon: Globe },
+              { id: 'logs', label: 'Activity Logs', icon: ShieldAlert },
+              { id: 'settings', label: 'Settings', icon: Settings }
+            ].map(item => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => {
+                    setActiveTab(item.id as any);
+                    playNotificationSound();
+                  }}
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
+                    isActive
+                      ? 'bg-[#C8A96A] text-black shadow-md'
+                      : 'text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-[#15151A] hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                  title={item.label}
+                >
+                  <Icon className="w-4.5 h-4.5 shrink-0" />
+                  {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
+                </button>
+              );
+            })}
+          </nav>
         </div>
 
-        {/* Overview Dashboard Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-lg">
-            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Total Catalog</p>
-            <p className="font-serif-luxury text-3xl font-bold text-[#C8A96A] mt-1">{totalSlabs}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Live Slabs & Tiles</p>
-          </div>
-
-          <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-lg">
-            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Tiles Collection</p>
-            <p className="font-serif-luxury text-3xl font-bold text-blue-500 mt-1">{tilesCount}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Vitrified & Ceramic</p>
-          </div>
-
-          <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-lg">
-            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Granites</p>
-            <p className="font-serif-luxury text-3xl font-bold text-emerald-500 mt-1">{graniteCount}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Subterranean Hard Rock</p>
-          </div>
-
-          <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-lg">
-            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Marbles</p>
-            <p className="font-serif-luxury text-3xl font-bold text-purple-500 mt-1">{marbleCount}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Italian & Greek Calcite</p>
-          </div>
-
-          <div className="col-span-2 md:col-span-1 bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-lg">
-            <p className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold">Total Stock Slabs</p>
-            <p className="font-serif-luxury text-3xl font-bold text-[#DFBA73] mt-1">{totalStock}</p>
-            <p className="text-[10px] text-gray-400 mt-1">Ready in Warehouse</p>
-          </div>
-        </div>
-
-        {/* Navigation Tabs */}
-        <div className="flex items-center gap-4 border-b border-gray-200 dark:border-gray-800 pb-3">
-          <button
-            onClick={() => setActiveTab('inventory')}
-            className={`px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === 'inventory'
-                ? 'bg-[#C8A96A] text-black shadow-md'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <List className="w-4 h-4" /> Live Inventory List ({slabs.length})
-          </button>
-
+        {/* User Footer Profile */}
+        <div className="p-4 border-t border-gray-200 dark:border-gray-800/80">
           <button
             onClick={() => {
-              if (editingSlab) cancelEdit();
-              setActiveTab('add');
+              if (confirm('Log out from Admin portal?')) handleLogout();
             }}
-            className={`px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all flex items-center gap-2 ${
-              activeTab === 'add'
-                ? 'bg-[#C8A96A] text-black shadow-md'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-500/5 transition-all"
+            title="Logout"
           >
-            {editingSlab ? <Edit3 className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
-            {editingSlab ? `Edit "${editingSlab.name}"` : 'Add New Product (Tiles / Granite / Marble)'}
+            <LogOut className="w-4.5 h-4.5 shrink-0" />
+            {!isSidebarCollapsed && <span className="truncate">Logout</span>}
           </button>
         </div>
+      </aside>
 
-        {/* TAB 1: ADD / EDIT PRODUCT FORM */}
-        {activeTab === 'add' && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-8"
-          >
-            <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
-              <div>
-                <h2 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
-                  {editingSlab ? 'Edit Product Details' : 'Add New Product to Atelier Catalog'}
-                </h2>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                  Fill in the details below to add Floor Tiles, Wall Tiles, Granite, Marble, or Sanitary Items.
-                </p>
-              </div>
+      {/* ───────────────── MAIN AREA CONTENT ───────────────── */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
+        
+        {/* Sticky Header */}
+        <header className="sticky top-0 bg-white/80 dark:bg-[#0A0A0C]/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800/85 z-20 px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            {/* Mobile Sidebar menu toggle */}
+            <button
+              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden text-gray-500"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
 
-              {editingSlab && (
-                <button
-                  onClick={cancelEdit}
-                  className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-xs font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Cancel Editing
-                </button>
-              )}
-            </div>
+            <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2.5 py-1.5 rounded-xl font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5" /> Portal Root Admin
+            </span>
+          </div>
 
-            <form onSubmit={handleSubmit} className="space-y-8">
-              {/* Category Quick Selector */}
-              <div className="space-y-3">
-                <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
-                  1. Select Product Category *
-                </label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {[
-                    { label: 'Floor Tiles', icon: '🧱' },
-                    { label: 'Wall Tiles', icon: '🪟' },
-                    { label: 'Granite', icon: '🪨' },
-                    { label: 'Marble', icon: '🏛️' },
-                    { label: 'Sanitary Items', icon: '🚿' }
-                  ].map(({ label, icon }) => (
-                    <button
-                      key={label}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, category: label as any })}
-                      className={`p-4 rounded-2xl border text-sm font-bold tracking-wide transition-all text-center flex flex-col items-center gap-1.5 ${
-                        formData.category === label
-                          ? 'border-[#C8A96A] bg-[#C8A96A]/10 text-[#C8A96A] shadow-md ring-2 ring-[#C8A96A]/30'
-                          : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1A1A1F] text-gray-700 dark:text-gray-300 hover:border-[#C8A96A]/50'
-                      }`}
+          <div className="flex items-center gap-4">
+            {/* Keyboard Palette Button */}
+            <button
+              onClick={() => setShowCommandPalette(true)}
+              className="px-3 py-1.5 border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-xl text-[10px] font-bold text-gray-400 dark:text-gray-400 flex items-center gap-1.5 transition-all shadow-xs"
+            >
+              <Command className="w-3.5 h-3.5" />
+              <span>Search Options</span>
+              <kbd className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-[9px]">Ctrl+K</kbd>
+            </button>
+
+            {/* Sound Toggle */}
+            <button
+              onClick={() => setSoundEnabled(!soundEnabled)}
+              className="p-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A] text-gray-400 hover:text-gray-700 dark:hover:text-white transition-all"
+              title={soundEnabled ? 'Mute portal sounds' : 'Unmute portal sounds'}
+            >
+              {soundEnabled ? <Volume2 className="w-4.5 h-4.5 text-[#C8A96A]" /> : <VolumeX className="w-4.5 h-4.5 text-gray-450" />}
+            </button>
+
+            {/* Notification Bell */}
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="p-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A] text-gray-400 hover:text-gray-700 dark:hover:text-white transition-all relative"
+              >
+                <Bell className="w-4.5 h-4.5" />
+                {notifications.some(n => !n.read) && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                )}
+              </button>
+
+              {/* Notifications Dropdown */}
+              <AnimatePresence>
+                {showNotifications && (
+                  <>
+                    <div className="fixed inset-0 z-30" onClick={() => setShowNotifications(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute right-0 mt-3 w-80 bg-white dark:bg-[#121215] border border-gray-200 dark:border-gray-800 rounded-3xl p-5 shadow-2xl z-40 text-xs text-left"
                     >
-                      <span className="text-base">{icon}</span>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Basic Fields */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="space-y-2 md:col-span-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Product / Slab Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Royal Statuario Carving Tile or Black Galaxy Granite"
-                    value={formData.name || ''}
-                    onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Color & Veining Tone
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Pure White & Gold Veins"
-                    value={formData.color || ''}
-                    onChange={e => setFormData({ ...formData, color: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    In-Stock Quantity (Slabs / Boxes)
-                  </label>
-                  <input
-                    type="number"
-                    min="0"
-                    placeholder="e.g. 50"
-                    value={formData.inStockSlabs ?? 25}
-                    onChange={e => setFormData({ ...formData, inStockSlabs: parseInt(e.target.value) || 0 })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Product Price (₹) *
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    min="0"
-                    placeholder="e.g. 150"
-                    value={formData.price ?? ''}
-                    onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Pricing Unit
-                  </label>
-                  <select
-                    value={formData.unit || 'Per Square Foot'}
-                    onChange={e => setFormData({ ...formData, unit: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 focus:border-[#C8A96A] focus:outline-none"
-                  >
-                    <option value="Per Square Foot">Per Square Foot (sq.ft.)</option>
-                    <option value="Per Box">Per Box</option>
-                    <option value="Per Piece">Per Piece</option>
-                    <option value="Per Slab">Per Slab</option>
-                  </select>
-                </div>
-
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Dimensions (e.g. 1200 x 1800 x 9 mm)
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 3200 x 1950 x 20 mm"
-                    value={formData.dimensions || ''}
-                    onChange={e => setFormData({ ...formData, dimensions: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Thickness Options
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 9 mm / 12 mm / 20 mm"
-                    value={formData.thickness || ''}
-                    onChange={e => setFormData({ ...formData, thickness: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Lot / Bundle Number
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. LOT-8840"
-                    value={formData.bundleNumber || ''}
-                    onChange={e => setFormData({ ...formData, bundleNumber: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Image Upload Zone */}
-              <div className="space-y-4 border-t border-b border-gray-200 dark:border-gray-800 py-6">
-                <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
-                  Product High-Resolution Image *
-                </label>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                  <div className="space-y-3">
-                    {formData.image ? (
-                      <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1A1A1F] p-4 flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3 min-w-0">
-                          <img
-                            src={formData.image}
-                            alt="Uploaded"
-                            className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
-                            onError={e => {
-                              (e.target as HTMLImageElement).src = PRESET_IMAGES[0].url;
-                            }}
-                          />
-                          <div className="min-w-0">
-                            <p className="text-xs font-bold text-gray-900 dark:text-white truncate">Image successfully uploaded</p>
-                            <p className="text-[10px] text-emerald-500 font-semibold">Ready to publish</p>
-                          </div>
-                        </div>
+                      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-2 mb-3">
+                        <span className="font-bold text-sm">Notifications Center</span>
                         <button
-                          type="button"
-                          onClick={() => setFormData({ ...formData, image: '' })}
-                          className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 transition-colors shadow-sm"
-                          title="Remove image"
+                          onClick={() => {
+                            setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+                            setShowNotifications(false);
+                          }}
+                          className="text-[10px] text-[#C8A96A] font-bold hover:underline"
                         >
-                          <X className="w-4 h-4" />
+                          Clear Unread
                         </button>
                       </div>
-                    ) : (
-                      <div className="relative">
-                        <label className="group flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-3xl bg-gray-50 dark:bg-[#1A1A1F]/30 hover:bg-gray-50/50 dark:hover:bg-[#1A1A1F]/60 cursor-pointer transition-all duration-300 min-h-[160px] text-center">
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleFileUpload}
-                            disabled={isUploading}
-                            className="hidden"
-                          />
-                          
-                          {isUploading ? (
-                            <div className="space-y-2">
-                              <Loader2 className="w-8 h-8 mx-auto text-[#C8A96A] animate-spin" />
-                              <p className="text-xs font-bold text-gray-600 dark:text-gray-400">Processing & uploading image...</p>
-                            </div>
-                          ) : (
-                            <div className="space-y-2">
-                              <div className="w-12 h-12 rounded-2xl bg-[#C8A96A]/10 text-[#C8A96A] flex items-center justify-center mx-auto transition-transform duration-300 group-hover:scale-105">
-                                <Upload className="w-5 h-5" />
-                              </div>
-                              <div>
-                                <p className="text-xs font-bold text-gray-800 dark:text-gray-200">
-                                  Drag & drop or <span className="text-[#C8A96A] hover:underline">browse file</span>
-                                </p>
-                                <p className="text-[10px] text-gray-400 mt-1 font-medium">Supports JPG, PNG, WEBP (Max 5MB)</p>
-                              </div>
-                            </div>
-                          )}
-                        </label>
+                      <div className="space-y-2.5 max-h-[220px] overflow-y-auto">
+                        {notifications.map(n => (
+                          <div
+                            key={n.id}
+                            className={`p-2.5 rounded-xl border ${
+                              n.read ? 'border-transparent bg-gray-50/50 dark:bg-[#1A1A1F]/30' : 'border-[#C8A96A]/20 bg-[#C8A96A]/5'
+                            }`}
+                          >
+                            <p className="font-semibold text-gray-850 dark:text-gray-200 leading-tight">{n.text}</p>
+                            <span className="text-[9px] text-gray-400 block mt-1">{n.time}</span>
+                          </div>
+                        ))}
                       </div>
-                    )}
-
-                    {uploadError && (
-                      <div className="flex items-center gap-1.5 text-xs text-red-500 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
-                        <AlertCircle className="w-3.5 h-3.5 shrink-0" />
-                        <span>{uploadError}</span>
-                      </div>
-                    )}
-
-
-                  </div>
-
-                  {/* Image Preview Box */}
-                  <div className="bg-gray-100 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-2xl p-4 flex flex-col items-center justify-center text-center min-h-[160px] relative overflow-hidden">
-                    {formData.image ? (
-                      <div className="space-y-2 w-full">
-                        <img
-                          src={formData.image}
-                          alt="Product Preview"
-                          className="w-full h-40 object-cover rounded-xl shadow-md border border-gray-200 dark:border-gray-800"
-                        />
-                        <p className="text-[11px] text-gray-400">High-Resolution Live Preview</p>
-                      </div>
-                    ) : (
-                      <div className="text-gray-400 space-y-1">
-                        <ImageIcon className="w-8 h-8 mx-auto text-gray-400 opacity-60" />
-                        <p className="text-xs font-semibold">Image Preview Zone</p>
-                        <p className="text-[10px] opacity-60">Upload an image to preview here</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-
-
-              {/* Description */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Short Tagline / Summary
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Brief description for catalog view..."
-                    value={formData.description || ''}
-                    onChange={e => setFormData({ ...formData, description: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl p-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                    Detailed Specification Description
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Full geological origin details, interior design recommendations..."
-                    value={formData.longDescription || ''}
-                    onChange={e => setFormData({ ...formData, longDescription: e.target.value })}
-                    className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl p-3 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Submit Buttons */}
-              <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-200 dark:border-gray-800">
-                <button
-                  type="button"
-                  onClick={cancelEdit}
-                  className="px-6 py-3 rounded-xl border border-gray-300 dark:border-gray-700 text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
-                  Cancel
-                </button>
-
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#DFBA73] via-[#C8A96A] to-[#8C6D2B] text-black font-bold text-xs uppercase tracking-widest shadow-xl hover:brightness-110 disabled:opacity-50 disabled:pointer-events-none transition-all flex items-center gap-2"
-                >
-                  {isSaving ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="w-4 h-4" />
-                      <span>{editingSlab ? 'Save Changes' : 'Publish Product to Live Inventory'}</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          </motion.div>
-        )}
-
-        {/* TAB 2: INVENTORY TABLE */}
-        {activeTab === 'inventory' && (
-          <div className="space-y-6">
-            {/* Search & Category Filter Bar */}
-            <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
-              {/* Category Filter Pills */}
-              <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                {['All', 'Floor Tiles', 'Wall Tiles', 'Granite', 'Marble', 'Sanitary Items'].map(cat => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${
-                      selectedCategory === cat
-                        ? 'bg-[#C8A96A] text-black shadow-md'
-                        : 'bg-gray-100 dark:bg-[#1A1A1F] text-gray-600 dark:text-gray-300 hover:border-[#C8A96A]'
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
-              {/* Search input */}
-              <div className="relative w-full md:w-80">
-                <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search name, color..."
-                  value={searchQuery}
-                  onChange={e => setSearchQuery(e.target.value)}
-                  className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl pl-11 pr-4 py-2 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Inventory List Table */}
-            <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl shadow-xl overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-gray-50 dark:bg-[#17171C] text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold border-b border-gray-200 dark:border-gray-800">
-                    <tr>
-                      <th className="py-4 px-6">Product</th>
-                      <th className="py-4 px-4">Category</th>
-                      <th className="py-4 px-4">Origin & Dimensions</th>
-                      <th className="py-4 px-4">Price</th>
-                      <th className="py-4 px-4 text-center">In Stock</th>
-                      <th className="py-4 px-6 text-right">Actions</th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="divide-y divide-gray-200 dark:divide-gray-800 font-sans-luxury">
-                    {filteredSlabs.length === 0 ? (
-                      <tr>
-                        <td colSpan={6} className="py-12 text-center text-gray-400">
-                          No products found matching your search filters.
-                        </td>
-                      </tr>
-                    ) : (
-                      filteredSlabs.map(slab => (
-                        <tr key={slab.id} className="hover:bg-gray-50/50 dark:hover:bg-[#1A1A20] transition-colors">
-                          <td className="py-4 px-6">
-                            <div className="flex items-center gap-4">
-                              <img
-                                src={slab.image}
-                                alt={slab.name}
-                                className="w-14 h-14 rounded-xl object-cover border border-gray-200 dark:border-gray-700 shadow-sm flex-shrink-0"
-                              />
-                              <div>
-                                <p className="font-bold text-sm text-gray-900 dark:text-white hover:text-[#C8A96A] transition-colors">
-                                  {slab.name}
-                                </p>
-                                <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                                  {slab.color} • {slab.rarity}
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-
-                          <td className="py-4 px-4">
-                            <span
-                              className={`inline-block px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider ${
-                                slab.category === 'Tiles'
-                                  ? 'bg-blue-500/10 text-blue-500 border border-blue-500/30'
-                                  : slab.category === 'Granite'
-                                  ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/30'
-                                  : slab.category === 'Marble'
-                                  ? 'bg-purple-500/10 text-purple-500 border border-purple-500/30'
-                                  : 'bg-[#C8A96A]/10 text-[#C8A96A] border border-[#C8A96A]/30'
-                              }`}
-                            >
-                              {slab.category}
-                            </span>
-                          </td>
-
-                          <td className="py-4 px-4 text-gray-700 dark:text-gray-300">
-                            <p className="text-[10px] text-gray-400">{slab.dimensions}</p>
-                          </td>
-
-                          <td className="py-4 px-4 text-gray-700 dark:text-gray-300">
-                            <p className="font-bold text-[#C8A96A]">
-                              {slab.price !== undefined && slab.price !== null ? `₹${slab.price}` : '—'}
-                            </p>
-                            <p className="text-[10px] text-gray-400">
-                              {slab.unit || 'Per Square Foot'}
-                            </p>
-                          </td>
-
-                          <td className="py-4 px-4 text-center">
-                            <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold ${
-                                slab.inStockSlabs > 0
-                                  ? 'bg-green-500/10 text-green-500'
-                                  : 'bg-red-500/10 text-red-500'
-                              }`}
-                            >
-                              {slab.inStockSlabs} {slab.category === 'Tiles' ? 'boxes' : 'slabs'}
-                            </span>
-                          </td>
-
-                          <td className="py-4 px-6 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <button
-                                onClick={() => startEdit(slab)}
-                                title="Edit Product"
-                                className="p-2 rounded-lg bg-gray-100 dark:bg-[#202026] text-gray-700 dark:text-gray-300 hover:text-[#C8A96A] hover:border-[#C8A96A] transition-colors"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-
-                              {deleteConfirmId === slab.id ? (
-                                <div className="flex items-center gap-1 bg-red-500/10 p-1 rounded-lg border border-red-500/30">
-                                  <button
-                                    disabled={isDeleting === slab.id}
-                                    onClick={async () => {
-                                      setIsDeleting(slab.id);
-                                      try {
-                                        await deleteSlab(slab.id);
-                                        setDeleteConfirmId(null);
-                                      } catch (err) {
-                                        console.error('Delete failed:', err);
-                                        alert(err instanceof Error ? err.message : String(err));
-                                      } finally {
-                                        setIsDeleting(null);
-                                      }
-                                    }}
-                                    className="px-2 py-1 bg-red-600 text-white font-bold text-[10px] rounded hover:bg-red-700 disabled:opacity-50 flex items-center gap-1"
-                                  >
-                                    {isDeleting === slab.id && <Loader2 className="w-3 h-3 animate-spin" />}
-                                    {isDeleting === slab.id ? 'Deleting...' : 'Confirm Delete'}
-                                  </button>
-                                  <button
-                                    disabled={isDeleting === slab.id}
-                                    onClick={() => setDeleteConfirmId(null)}
-                                    className="p-1 text-gray-400 hover:text-white disabled:opacity-50"
-                                  >
-                                    <XCircle className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              ) : (
-                                <button
-                                  onClick={() => setDeleteConfirmId(slab.id)}
-                                  title="Delete Product"
-                                  className="p-2 rounded-lg bg-gray-100 dark:bg-[#202026] text-gray-700 dark:text-gray-300 hover:text-red-500 transition-colors"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-        )}
+        </header>
+
+        {/* View Content Workspace */}
+        <main className="flex-1 p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+          <AnimatePresence mode="wait">
+            {activeTab === 'dashboard' && (
+              <DashboardView key="dashboard" slabs={slabs} sampleRequestsCount={sampleOrders.length} />
+            )}
+
+            {activeTab === 'inventory' && (
+              <ProductManagementView
+                key="inventory"
+                slabs={slabs}
+                onStartEdit={startEdit}
+                onDeleteSlab={deleteSlab}
+                onAddSlab={addSlab}
+                onUpdateSlab={updateSlab}
+                onNavigateToAdd={() => setActiveTab('add')}
+              />
+            )}
+
+            {activeTab === 'stock' && (
+              <InventoryView key="stock" slabs={slabs} onUpdateSlab={updateSlab} />
+            )}
+
+            {activeTab === 'categories' && (
+              <CategoriesBrandsView key="categories" />
+            )}
+
+            {activeTab === 'bookings' && (
+              <ContactBookingsView
+                key="bookings"
+                sampleOrders={sampleOrders}
+                onDeleteSampleOrder={handleDeleteOrder}
+              />
+            )}
+
+            {activeTab === 'seo' && (
+              <SEOPanelView key="seo" />
+            )}
+
+            {activeTab === 'logs' && (
+              <AuditLogsView key="logs" />
+            )}
+
+            {activeTab === 'settings' && (
+              <SettingsView key="settings" />
+            )}
+
+            {/* TAB 1: ADD / EDIT PRODUCT FORM */}
+            {activeTab === 'add' && (
+              <motion.div
+                key="add"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 15 }}
+                className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-8 text-left text-xs"
+              >
+                <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
+                  <div>
+                    <h2 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
+                      {editingSlab ? 'Edit Product Details' : 'Add New Product to Atelier Catalog'}
+                    </h2>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                      Fill in the details below to add Floor Tiles, Wall Tiles, Granite, Marble, or Sanitary Items.
+                    </p>
+                  </div>
+                  {editingSlab && (
+                    <button
+                      onClick={cancelEdit}
+                      className="px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-xs font-semibold text-gray-650 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      Cancel Editing
+                    </button>
+                  )}
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-8 text-gray-850 dark:text-gray-200">
+                  {/* Category Quick Selector */}
+                  <div className="space-y-3">
+                    <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
+                      1. Select Product Category *
+                    </label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                      {[
+                        { label: 'Floor Tiles', icon: '🧱' },
+                        { label: 'Wall Tiles', icon: '🪟' },
+                        { label: 'Granite', icon: '🪨' },
+                        { label: 'Marble', icon: '🏛️' },
+                        { label: 'Sanitary Items', icon: '🚿' }
+                      ].map(({ label, icon }) => (
+                        <button
+                          key={label}
+                          type="button"
+                          onClick={() => setFormData({ ...formData, category: label as any })}
+                          className={`p-4 rounded-2xl border text-xs font-bold tracking-wide transition-all text-center flex flex-col items-center gap-1.5 ${
+                            formData.category === label
+                              ? 'border-[#C8A96A] bg-[#C8A96A]/10 text-[#C8A96A] shadow-md ring-2 ring-[#C8A96A]/30'
+                              : 'border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-[#1A1A1F] text-gray-700 dark:text-gray-300 hover:border-[#C8A96A]/50'
+                          }`}
+                        >
+                          <span className="text-base">{icon}</span>
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Basic Fields */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Product / Slab Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Royal Statuario Carving Tile or Black Galaxy Granite"
+                        value={formData.name || ''}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Color & Veining Tone
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Pure White & Gold Veins"
+                        value={formData.color || ''}
+                        onChange={e => setFormData({ ...formData, color: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        In-Stock Quantity (Slabs / Boxes)
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 50"
+                        value={formData.inStockSlabs ?? 25}
+                        onChange={e => setFormData({ ...formData, inStockSlabs: parseInt(e.target.value) || 0 })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Product Price (₹) *
+                      </label>
+                      <input
+                        type="number"
+                        required
+                        min="0"
+                        placeholder="e.g. 150"
+                        value={formData.price ?? ''}
+                        onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Price Unit
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Per Square Foot"
+                        value={formData.unit || ''}
+                        onChange={e => setFormData({ ...formData, unit: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-255 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Specifications */}
+                  <div className="space-y-4 border-t border-gray-200 dark:border-gray-805 pt-6">
+                    <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
+                      2. Product Specifications (Technical Details)
+                    </label>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                      <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Compressive Strength</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 210 MPa"
+                          value={formData.specifications?.compressiveStrength || ''}
+                          onChange={e => setFormData({
+                            ...formData,
+                            specifications: {
+                              ...(formData.specifications || {}),
+                              compressiveStrength: e.target.value
+                            } as any
+                          })}
+                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Water Absorption</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. < 0.08%"
+                          value={formData.specifications?.waterAbsorption || ''}
+                          onChange={e => setFormData({
+                            ...formData,
+                            specifications: {
+                              ...(formData.specifications || {}),
+                              waterAbsorption: e.target.value
+                            } as any
+                          })}
+                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Density</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 2.50 g/cm³"
+                          value={formData.specifications?.density || ''}
+                          onChange={e => setFormData({
+                            ...formData,
+                            specifications: {
+                              ...(formData.specifications || {}),
+                              density: e.target.value
+                            } as any
+                          })}
+                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Flexural Strength</label>
+                        <input
+                          type="text"
+                          placeholder="e.g. 40 MPa"
+                          value={formData.specifications?.flexuralStrength || ''}
+                          onChange={e => setFormData({
+                            ...formData,
+                            specifications: {
+                              ...(formData.specifications || {}),
+                              flexuralStrength: e.target.value
+                            } as any
+                          })}
+                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Images & Details */}
+                  <div className="space-y-4 border-t border-gray-200 dark:border-gray-805 pt-6">
+                    <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
+                      3. Media Files & Imagery
+                    </label>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                      <div className="space-y-3">
+                        {formData.image ? (
+                          <div className="relative rounded-2xl overflow-hidden border border-gray-250 dark:border-gray-800 bg-gray-55 dark:bg-[#1A1A1F] p-4 flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-3 min-w-0">
+                              <img
+                                src={formData.image}
+                                alt="Uploaded"
+                                className="w-16 h-16 object-cover rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm shrink-0"
+                                onError={e => {
+                                  (e.target as HTMLImageElement).src = PRESET_IMAGES[0].url;
+                                }}
+                              />
+                              <div className="min-w-0">
+                                <p className="text-xs font-bold text-gray-900 dark:text-white truncate">Image successfully uploaded</p>
+                                <p className="text-[10px] text-emerald-500 font-semibold">Ready to publish</p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setFormData({ ...formData, image: '' })}
+                              className="p-1.5 text-gray-400 hover:text-red-500"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <div className="border-2 border-dashed border-gray-250 dark:border-gray-800 rounded-3xl p-6 text-center space-y-2">
+                            <ImageIcon className="w-8 h-8 text-gray-400 mx-auto" />
+                            <div>
+                              <label className="inline-block px-4 py-2 rounded-xl bg-gray-100 dark:bg-gray-800 text-xs font-bold text-[#C8A96A] cursor-pointer hover:bg-[#C8A96A]/10 transition-colors">
+                                Upload Product Image
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={handleFileUpload}
+                                  disabled={isUploading}
+                                />
+                              </label>
+                              <p className="text-[9px] text-gray-400 mt-1">PNG, JPG or WebP up to 5MB</p>
+                            </div>
+                            {isUploading && <Loader2 className="w-4 h-4 animate-spin text-[#C8A96A] mx-auto" />}
+                            {uploadError && <p className="text-[10px] text-red-500">{uploadError}</p>}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Preset quick selection images */}
+                      <div className="space-y-2">
+                        <label className="text-[10px] uppercase text-gray-450 font-bold block">Or Quick Select Preset Mock Asset</label>
+                        <div className="grid grid-cols-2 gap-2">
+                          {PRESET_IMAGES.map((img, idx) => (
+                            <button
+                              key={idx}
+                              type="button"
+                              onClick={() => setFormData({ ...formData, image: img.url })}
+                              className={`flex items-center gap-2 p-2 rounded-xl border text-left text-[9px] transition-all hover:bg-gray-50 dark:hover:bg-[#1A1A1F] ${
+                                formData.image === img.url ? 'border-[#C8A96A] bg-[#C8A96A]/5' : 'border-gray-200 dark:border-gray-800'
+                              }`}
+                            >
+                              <img src={img.url} alt="" className="w-8 h-8 object-cover rounded-lg" />
+                              <span className="font-bold truncate text-gray-700 dark:text-gray-300">{img.name}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Descriptions */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 border-t border-gray-200 dark:border-gray-805 pt-6">
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Short Tagline / Summary
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder="Brief description for catalog view..."
+                        value={formData.description || ''}
+                        onChange={e => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl p-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Detailed Specification Description
+                      </label>
+                      <textarea
+                        rows={3}
+                        placeholder="Full geological origin details, interior design recommendations..."
+                        value={formData.longDescription || ''}
+                        onChange={e => setFormData({ ...formData, longDescription: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl p-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Form Submit buttons */}
+                  <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-250 dark:border-gray-800">
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      className="px-6 py-3 rounded-xl border border-gray-200 dark:border-gray-800 text-xs font-bold uppercase tracking-wider hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSaving}
+                      className="px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#DFBA73] via-[#C8A96A] to-[#8C6D2B] text-black font-bold text-xs uppercase tracking-widest hover:brightness-110 disabled:opacity-50 transition-all flex items-center gap-2 shadow-md"
+                    >
+                      {isSaving ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          <span>Saving...</span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle2 className="w-4 h-4" />
+                          <span>{editingSlab ? 'Save Changes' : 'Publish Product to Live Inventory'}</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </main>
       </div>
+
+      {/* ───────────────── COMMAND PALETTE (CTRL+K) ───────────────── */}
+      <AnimatePresence>
+        {showCommandPalette && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowCommandPalette(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xs"
+            />
+
+            {/* Panel Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white dark:bg-[#111114] border border-[#C8A96A]/30 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col text-xs text-left"
+            >
+              <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center gap-3">
+                <Command className="w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Type a dashboard view or category to navigate..."
+                  value={commandQuery}
+                  onChange={e => setCommandQuery(e.target.value)}
+                  className="flex-1 bg-transparent border-none outline-none text-xs text-gray-900 dark:text-white placeholder-gray-450"
+                  autoFocus
+                />
+                <button
+                  onClick={() => setShowCommandPalette(false)}
+                  className="p-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-400"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="max-h-[300px] overflow-y-auto p-2 space-y-1">
+                {filteredCommands.length === 0 ? (
+                  <p className="text-center py-6 text-gray-400">No matching commands found.</p>
+                ) : (
+                  filteredCommands.map(cmd => (
+                    <button
+                      key={cmd.tab}
+                      onClick={() => {
+                        setActiveTab(cmd.tab as any);
+                        setShowCommandPalette(false);
+                        setCommandQuery('');
+                        playNotificationSound();
+                      }}
+                      className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-[#1A1A1F] text-left text-gray-700 dark:text-gray-300 font-bold transition-all"
+                    >
+                      <span>{cmd.name}</span>
+                      <ChevronRight className="w-4 h-4 text-gray-400" />
+                    </button>
+                  ))
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
     </div>
   );
 };

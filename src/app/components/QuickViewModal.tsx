@@ -98,11 +98,11 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
 
           <div className="grid grid-cols-1 md:grid-cols-12 items-stretch">
             {/* Left Image Area */}
-            <div className="md:col-span-6 bg-gray-50 relative min-h-[300px] md:min-h-[480px]">
+            <div className="md:col-span-6 bg-gray-50 relative min-h-[300px] md:min-h-[480px] overflow-hidden">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105 cursor-zoom-in"
               />
               <div className="absolute top-4 left-4 flex flex-col gap-2">
                 <span className="px-3.5 py-1 rounded-full bg-[#0B1F44] text-white font-bold text-xs uppercase tracking-wider shadow-md">

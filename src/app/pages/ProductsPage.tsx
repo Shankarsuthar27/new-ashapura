@@ -61,6 +61,7 @@ export const ProductsPage: React.FC = () => {
     origin: slab.origin,
     finishes: slab.finishes,
     description: slab.description,
+    longDescription: slab.longDescription,
     popularityScore: slab.inStockSlabs,
     createdDate: '2026-01-01',
     specifications: slab.specifications
@@ -329,7 +330,7 @@ export const ProductsPage: React.FC = () => {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                   />
 
                   {/* Top Badges */}
@@ -364,13 +365,45 @@ export const ProductsPage: React.FC = () => {
                       </span>
                     </div>
 
-                    {/* Product Name */}
                     <h3
                       onClick={() => handleOpenQuickView(product)}
                       className="font-serif-luxury text-xl font-bold text-[#0B1F44] hover:text-[#EF233C] transition-colors cursor-pointer line-clamp-1"
                     >
                       {product.name}
                     </h3>
+
+                    {product.description && (
+                      <p className="text-xs text-gray-500 line-clamp-2 mt-1">
+                        {product.description}
+                      </p>
+                    )}
+
+                    {product.longDescription && (
+                      <p className="text-[11px] text-gray-400 line-clamp-2 leading-relaxed italic border-l-2 border-red-500/20 pl-2 mt-1">
+                        {product.longDescription}
+                      </p>
+                    )}
+
+                    {product.specifications && (
+                      <div className="pt-3 border-t border-gray-100 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[10px] text-gray-700">
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Comp. Strength</span>
+                          <span className="font-bold text-[#0B1F44]">{product.specifications.compressiveStrength}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Water Absorption</span>
+                          <span className="font-bold text-[#0B1F44]">{product.specifications.waterAbsorption}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Density</span>
+                          <span className="font-bold text-[#0B1F44]">{product.specifications.density}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Flex. Strength</span>
+                          <span className="font-bold text-[#0B1F44]">{product.specifications.flexuralStrength}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {/* Action Buttons */}

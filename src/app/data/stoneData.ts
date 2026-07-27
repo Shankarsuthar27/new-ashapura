@@ -438,7 +438,7 @@ While cool grey Statuario dominated the previous decade, warm honey and champagn
 
 ### 3. Sintered Ultra-Thin Porcelain Facades
 Architects are increasingly incorporating lightweight porcelain sintered slabs into outdoor living spaces and high-rise apartment exterior facades for zero-fading weather endurance.`,
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85',
+    image: 'img1.jpeg',
     tags: ['Marble', 'Calacatta', 'Bookmatching', 'Interior Design']
   },
   {
@@ -458,7 +458,7 @@ Unlike marble, which is composed primarily of calcium carbonate, quartzite origi
 
 ### Acid Resistance & Etching
 Marble reacts with lemons, wine, and acidic vinegar, requiring periodic sealant maintenance. Quartzite, by contrast, is completely chemically inert to culinary acids, preserving its factory polish effortlessly.`,
-    image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85',
+    image: 'img2.jpeg',
     tags: ['Quartzite', 'Kitchen Countertops', 'Material Science', 'Maintenance']
   },
   {
@@ -476,7 +476,7 @@ Marble reacts with lemons, wine, and acidic vinegar, requiring periodic sealant 
 1. **pH-Neutral Cleaners Only**: Never use ammonia, bleach, or vinegar on natural calcite marble. Always use specialized pH-neutral stone soaps.
 2. **Penetrating Hydrophobic Sealers**: Apply fluoropolymer sealers once every 12 to 18 months to create a microscopic barrier against oil and water stains.
 3. **Prompt Spill Cleanup**: Wipe up wine, coffee, or citrus drips immediately using soft microfiber cloths.`,
-    image: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=85',
+    image: 'img3.jpeg',
     tags: ['Stone Care', 'Sealing', 'Marble Maintenance']
   }
 ];

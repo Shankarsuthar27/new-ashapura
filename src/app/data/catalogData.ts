@@ -11,6 +11,7 @@ export interface CatalogProduct {
   colorHex?: string;
   finishes?: string[];
   description?: string;
+  longDescription?: string;
   origin?: string;
   popularityScore?: number;
   createdDate?: string;

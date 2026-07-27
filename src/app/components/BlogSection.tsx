@@ -35,11 +35,11 @@ export const BlogSection: React.FC = () => {
               className="group rounded-3xl overflow-hidden bg-gray-50 dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 transition-all duration-500 hover:-translate-y-2 cursor-pointer flex flex-col justify-between"
             >
               {/* Image Banner */}
-              <div className="relative h-56 w-full overflow-hidden bg-black">
+              <div className="relative h-72 w-full overflow-hidden bg-black">
                 <img
                   src={article.image}
                   alt={article.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#C8A96A] text-black font-bold text-[10px] uppercase tracking-wider">
@@ -98,7 +98,7 @@ export const BlogSection: React.FC = () => {
               className="relative max-w-3xl w-full bg-[#FFFFFF] dark:bg-[#121215] border border-[#C8A96A]/40 rounded-3xl overflow-hidden shadow-2xl z-10 text-gray-900 dark:text-gray-100 my-auto max-h-[85vh] flex flex-col"
             >
               {/* Top Banner */}
-              <div className="relative h-64 sm:h-72 w-full shrink-0">
+              <div className="relative h-80 sm:h-[400px] w-full shrink-0">
                 <img
                   src={activeArticle.image}
                   alt={activeArticle.title}

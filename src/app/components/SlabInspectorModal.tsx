@@ -121,6 +121,26 @@ export const SlabInspectorModal: React.FC = () => {
                       <span className="text-gray-400 block">Available Slabs</span>
                       <span className="font-medium text-[#C8A96A]">{slab.inStockSlabs} Slabs in Stock</span>
                     </div>
+                    {slab.specifications && (
+                      <>
+                        <div>
+                          <span className="text-gray-400 block">Compressive Strength</span>
+                          <span className="font-medium">{slab.specifications.compressiveStrength}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block">Water Absorption</span>
+                          <span className="font-medium">{slab.specifications.waterAbsorption}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block">Density</span>
+                          <span className="font-medium">{slab.specifications.density}</span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400 block">Flexural Strength</span>
+                          <span className="font-medium">{slab.specifications.flexuralStrength}</span>
+                        </div>
+                      </>
+                    )}
                   </div>
                 </div>
 
