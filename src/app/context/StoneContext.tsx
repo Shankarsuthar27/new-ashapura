@@ -43,7 +43,7 @@ interface StoneContextType {
 
 const StoneContext = createContext<StoneContextType | undefined>(undefined);
 
-const SLABS_STORAGE_KEY = 'ashapura_slabs_v3';
+const SLABS_STORAGE_KEY = 'ashapura_slabs_v4';
 
 function loadInitialSlabs(): StoneSlab[] {
   try {

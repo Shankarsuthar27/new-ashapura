@@ -185,7 +185,7 @@ export const AdminPage: React.FC = () => {
     priceTier: '$$$$',
     price: 150,
     unit: 'Per Square Foot',
-    inStockSlabs: 25,
+    inStockSlabs: 0,
     bundleNumber: `LOT-${Math.floor(1000 + Math.random() * 9000)}`,
     rarity: 'Signature',
     description: '',
@@ -625,7 +625,7 @@ export const AdminPage: React.FC = () => {
                       <input
                         type="text"
                         required
-                        placeholder="e.g. Royal Statuario Carving Tile or Black Galaxy Granite"
+                        placeholder="e.g. White Statuario Marble or Black Galaxy Granite"
                         value={formData.name || ''}
                         onChange={e => setFormData({ ...formData, name: e.target.value })}
                         className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
@@ -653,7 +653,7 @@ export const AdminPage: React.FC = () => {
                         type="number"
                         min="0"
                         placeholder="e.g. 50"
-                        value={formData.inStockSlabs ?? 25}
+                        value={formData.inStockSlabs ?? 0}
                         onChange={e => setFormData({ ...formData, inStockSlabs: parseInt(e.target.value) || 0 })}
                         className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
                       />

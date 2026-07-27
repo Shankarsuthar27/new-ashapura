@@ -15,11 +15,9 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'bookings' | 'messages' | 'samples'>('bookings');
   
-  // Custom mock consultation bookings
   const [bookings, setBookings] = useState<any[]>([
     { id: 'BOOK-4428', date: '2026-07-27', time: '11:00 AM', name: 'Kabir Dev', phone: '+91 9988776655', email: 'kabir@vancecap.com', status: 'Pending', material: 'Calacatta Oro Extra', notes: 'Needs book-matched waterfall slab selection.' },
-    { id: 'BOOK-3102', date: '2026-07-28', time: '03:30 PM', name: 'Alia Sen', phone: '+91 9876543210', email: 'alia.sen@designstudio.it', status: 'Approved', material: 'Amazonite Emerald Quartzite', notes: 'Virtual showroom tour requested.' },
-    { id: 'BOOK-1092', date: '2026-07-24', time: '02:00 PM', name: 'Vikram Mehta', phone: '+91 9123456789', email: 'vikram@mehtahomes.com', status: 'Completed', material: 'Royal Statuario Carving Tile', notes: 'Completed showroom walkthrough, ordered 1500 sqft.' }
+    { id: 'BOOK-3102', date: '2026-07-28', time: '03:30 PM', name: 'Alia Sen', phone: '+91 9876543210', email: 'alia.sen@designstudio.it', status: 'Approved', material: 'Amazonite Emerald Quartzite', notes: 'Virtual showroom tour requested.' }
   ]);
 
   // Custom mock messages from the contact page

@@ -27,11 +27,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ slabs, onUpdateSla
   const [newStockVal, setNewStockVal] = useState<number>(0);
 
   // Stock movement audit logs
-  const [stockLogs, setStockLogs] = useState<Array<{ id: string; date: string; name: string; oldStock: number; newStock: number; type: 'in' | 'out' }>>([
-    { id: '1', date: new Date().toLocaleString(), name: 'Royal Statuario Carving Tile', oldStock: 20, newStock: 25, type: 'in' },
-    { id: '2', date: new Date(Date.now() - 3600000).toLocaleString(), name: 'Black Galaxy Granite', oldStock: 12, newStock: 8, type: 'out' },
-    { id: '3', date: new Date(Date.now() - 7200000).toLocaleString(), name: 'Bianco Lasa Marble', oldStock: 5, newStock: 15, type: 'in' }
-  ]);
+  const [stockLogs, setStockLogs] = useState<Array<{ id: string; date: string; name: string; oldStock: number; newStock: number; type: 'in' | 'out' }>>([]);
 
   // Aggregate stats
   const totalValue = useMemo(() => {

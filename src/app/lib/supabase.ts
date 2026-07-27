@@ -42,7 +42,7 @@ export async function fetchSupabaseSlabs(): Promise<StoneSlab[] | null> {
         priceTier: item.price_tier || '$$$$',
         price: item.price !== null ? Number(item.price) : undefined,
         unit: item.unit || 'Per Square Foot',
-        inStockSlabs: item.in_stock_slabs ?? 10,
+        inStockSlabs: item.in_stock_slabs ?? 0,
         bundleNumber: item.bundle_number || `LOT-${item.id}`,
         rarity: item.rarity || 'Signature',
         description: item.description || '',
