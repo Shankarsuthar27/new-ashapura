@@ -40,7 +40,6 @@ export const ShowroomLocations: React.FC = () => {
                   alt={showroom.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <span className="px-3 py-1 rounded-full bg-[#C8A96A] text-black font-semibold text-[10px] uppercase tracking-wider">
                     Ashapura tiles & granite

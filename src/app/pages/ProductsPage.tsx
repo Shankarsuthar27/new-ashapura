@@ -320,7 +320,7 @@ export const ProductsPage: React.FC = () => {
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 }
                 }}
-                className="group bg-white rounded-[24px] border border-gray-200 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                className="group bg-white rounded-[24px] border border-gray-200 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-none hover:shadow-none"
               >
                 {/* Image Area with 4:3 Aspect Ratio & Hover Zoom */}
                 <div
@@ -335,13 +335,13 @@ export const ProductsPage: React.FC = () => {
 
                   {/* Top Badges */}
                   <div className="absolute top-4 left-4 flex flex-col gap-1.5 pointer-events-none">
-                    <span className="px-3 py-1 rounded-full bg-[#0B1F44]/90 text-white font-bold text-[10px] uppercase tracking-wider backdrop-blur-md shadow-sm">
+                    <span className="px-3 py-1 rounded-full bg-[#0B1F44]/90 text-white font-bold text-[10px] uppercase tracking-wider backdrop-blur-md shadow-none">
                       {product.category}
                     </span>
                   </div>
 
                   {/* Price Tag Overlay */}
-                  <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-gray-200 text-right">
+                  <div className="absolute bottom-4 right-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-xl border border-gray-200 text-right shadow-none">
                     <span className="text-xs font-bold text-[#EF233C] block leading-none">
                       ₹{product.price.toFixed(2)}
                     </span>
@@ -407,26 +407,36 @@ export const ProductsPage: React.FC = () => {
                   </div>
 
                   {/* Action Buttons */}
-                  <div className="grid grid-cols-2 gap-3 pt-2">
-                    {/* Primary Button: "View" */}
+                  <div className="space-y-2 pt-2">
+                    {/* View Details */}
                     <button
                       onClick={() => handleOpenQuickView(product)}
-                      className="w-full py-3 rounded-2xl bg-[#EF233C] hover:bg-[#d90429] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-md hover:shadow-red-500/20 transition-all"
+                      className="w-full py-3 rounded-2xl gold-button hover:bg-[#d90429] text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-none"
                     >
-                      <ShoppingCart className="w-3.5 h-3.5" />
-                      <span>View</span>
+                      <span>View Specifications</span>
                     </button>
 
-                    {/* Secondary Button: "Enquire" */}
-                    <a
-                      href={`https://wa.me/919974617657?text=${encodeURIComponent(`Hi Ashapura Tiles & Granite, I would like to enquire about ${product.name} (${product.category}). Price: ₹${product.price}/${product.unit}`)}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full py-3 rounded-2xl bg-white hover:bg-gray-50 border-2 border-[#0B1F44] text-[#0B1F44] font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-sm"
-                    >
-                      <PhoneCall className="w-3.5 h-3.5" />
-                      <span>Enquire</span>
-                    </a>
+                    {/* Contact Options */}
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href={`https://wa.me/919974617657?text=${encodeURIComponent(`Hi Ashapura Tiles & Granite, I am interested in ${product.name} (${product.category}).`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-none"
+                      >
+                        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.8.001-2.615-1.013-5.074-2.859-6.921C16.375 2.036 13.918 1.017 11.3 1.017c-5.409 0-9.81 4.399-9.813 9.8-.001 1.77.464 3.498 1.347 5.022L1.817 21.39l5.961-1.565-.131-.22z"/>
+                        </svg>
+                        <span>WhatsApp</span>
+                      </a>
+                      <a
+                        href="tel:+919974617657"
+                        className="py-2.5 rounded-xl bg-[#0B1F44] hover:bg-[#122e61] text-white font-bold text-[11px] uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-none"
+                      >
+                        <PhoneCall className="w-3.5 h-3.5 text-[#C8A96A]" />
+                        <span>Call Now</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </motion.div>

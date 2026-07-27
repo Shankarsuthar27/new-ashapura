@@ -5,7 +5,6 @@ import { FeaturedCollections } from '../components/FeaturedCollections';
 
 import { WhyChooseUs } from '../components/WhyChooseUs';
 import { ShowroomLocations } from '../components/ShowroomLocations';
-import { TestimonialsSection } from '../components/TestimonialsSection';
 import { BlogSection } from '../components/BlogSection';
 import { ConsultationFormSection } from '../components/ConsultationFormSection';
 
@@ -28,8 +27,6 @@ export const HomePage: React.FC = () => {
       {/* 5. SHOWROOM LOCATIONS */}
       <ShowroomLocations />
 
-      {/* 7. CUSTOMER TESTIMONIALS */}
-      <TestimonialsSection />
 
       {/* 8. BLOG SECTION */}
       <BlogSection />

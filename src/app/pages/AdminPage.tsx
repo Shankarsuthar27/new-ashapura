@@ -686,6 +686,32 @@ export const AdminPage: React.FC = () => {
                         className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-255 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
                       />
                     </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Slab Dimensions (H × L)
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 3000 x 1800 x 20 mm"
+                        value={formData.dimensions || ''}
+                        onChange={e => setFormData({ ...formData, dimensions: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
+                        Thickness
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 20 mm"
+                        value={formData.thickness || ''}
+                        onChange={e => setFormData({ ...formData, thickness: e.target.value })}
+                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
+                      />
+                    </div>
                   </div>
 
                   {/* Specifications */}

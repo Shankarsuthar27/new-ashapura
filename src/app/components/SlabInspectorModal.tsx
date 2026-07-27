@@ -54,7 +54,6 @@ export const SlabInspectorModal: React.FC = () => {
                 alt={slab.name}
                 className="w-full h-full object-cover rounded-xl shadow-2xl transition-all duration-700 hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 pointer-events-none" />
 
               {/* Rarity & Bundle Badge */}
               <div className="absolute top-5 left-5 flex flex-wrap gap-2">

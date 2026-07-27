@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { STONE_CATEGORIES, SLABS_DATA } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
-import { ArrowLeft, Eye, Package, ArrowUpRight, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, Eye, Package, ArrowUpRight, ShieldCheck, PhoneCall } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export const CategoryPage: React.FC = () => {
@@ -25,14 +25,7 @@ export const CategoryPage: React.FC = () => {
         </button>
 
         {/* Hero Header */}
-        <div className="relative rounded-3xl overflow-hidden bg-black text-white p-8 sm:p-16 border border-[#C8A96A]/30">
-          <img
-            src={category.image}
-            alt={category.name}
-            className="absolute inset-0 w-full h-full object-cover opacity-40 contrast-125"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent" />
-
+        <div className="relative rounded-3xl overflow-hidden bg-stone-950 text-white p-8 sm:p-16 border border-[#C8A96A]/30">
           <div className="relative z-10 max-w-2xl space-y-4">
             <span className="px-4 py-1.5 rounded-full bg-[#C8A96A] text-black font-bold text-xs uppercase tracking-widest inline-block shadow-md">
               {category.tagline}
@@ -79,7 +72,7 @@ export const CategoryPage: React.FC = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, delay: idx * 0.08 }}
-                className="group bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 flex flex-col justify-between"
+                className="group bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 flex flex-col justify-between shadow-none hover:shadow-none"
               >
                 <div
                   className="relative h-80 sm:h-96 w-full overflow-hidden bg-black cursor-pointer"
@@ -90,7 +83,6 @@ export const CategoryPage: React.FC = () => {
                     alt={slab.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-90 group-hover:opacity-100"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
                   <div className="absolute top-4 left-4">
                     <span className="px-3 py-1 rounded-full bg-[#C8A96A] text-black font-bold text-[10px] uppercase tracking-wider">
                       {slab.rarity}
@@ -137,20 +129,43 @@ export const CategoryPage: React.FC = () => {
                     )}
                   </div>
 
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => addSampleToCart(slab)}
-                      className="py-2.5 px-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:border-[#C8A96A] text-xs font-semibold flex items-center justify-center gap-1.5"
-                    >
-                      <Package className="w-3.5 h-3.5 text-[#C8A96A]" /> Sample
-                    </button>
-                    <button
-                      onClick={() => setSelectedSlabForModal(slab)}
-                      className="py-2.5 px-3 rounded-xl gold-button text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1"
-                    >
-                      <span>Inspect</span>
-                      <ArrowUpRight className="w-3.5 h-3.5 text-black" />
-                    </button>
+                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={() => addSampleToCart(slab)}
+                        className="py-2.5 px-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:border-[#C8A96A] text-xs font-semibold flex items-center justify-center gap-1.5 text-gray-700 dark:text-gray-300 transition-colors"
+                      >
+                        <Package className="w-3.5 h-3.5 text-[#C8A96A]" /> Sample
+                      </button>
+                      <button
+                        onClick={() => setSelectedSlabForModal(slab)}
+                        className="py-2.5 px-3 rounded-xl gold-button text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-all"
+                      >
+                        <span>Inspect</span>
+                        <ArrowUpRight className="w-3.5 h-3.5 text-black" />
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href={`https://wa.me/919974617657?text=${encodeURIComponent(`Hi Ashapura Tiles & Granite, I am interested in ${slab.name} (${slab.category}).`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="py-2 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all"
+                      >
+                        <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.625 1.451 5.403.002 9.803-4.394 9.806-9.8.001-2.615-1.013-5.074-2.859-6.921C16.375 2.036 13.918 1.017 11.3 1.017c-5.409 0-9.81 4.399-9.813 9.8-.001 1.77.464 3.498 1.347 5.022L1.817 21.39l5.961-1.565-.131-.22z"/>
+                        </svg>
+                        <span>WhatsApp</span>
+                      </a>
+                      <a
+                        href="tel:+919974617657"
+                        className="py-2 rounded-xl bg-stone-900 hover:bg-stone-850 border border-stone-800 text-[#C8A96A] font-bold text-[10px] uppercase tracking-wider flex items-center justify-center gap-1 transition-all"
+                      >
+                        <PhoneCall className="w-3.5 h-3.5 text-[#C8A96A]" />
+                        <span>Call Now</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </motion.div>

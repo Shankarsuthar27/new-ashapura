@@ -242,24 +242,24 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
     id: 'marble-trends-2026',
-    title: '2026 Luxury Marble Trends: Book-Matched Veining & Bold Calacatta Gold',
+    title: '2026 Luxury Marble Trends: Indian Book-Matched Veining & Premium Calacatta Gold',
     slug: '2026-luxury-marble-trends',
     category: 'Design Trends',
     readTime: '6 min read',
     date: 'July 18, 2026',
-    author: 'Victoria Sterling',
-    authorRole: 'Chief Design Curator',
-    summary: 'Discover how top interior architects are deploying dramatic book-matched marble slabs to turn living rooms and master suites into monolithic stone sanctuaries.',
-    content: `Natural stone has evolved from a utilitarian countertop material into the centerpiece of luxury interior design. As we progress through 2026, the preference has shifted dramatically toward bold, sculptural stone selections with high-contrast veining.
+    author: 'Vikramaditya Sen',
+    authorRole: 'Principal Curator, Ashapura Granite',
+    summary: 'Discover how top interior designers are deploying dramatic book-matched marble slabs to turn modern Indian bungalows and penthouses into monolithic stone sanctuaries.',
+    content: `Natural stone has evolved from a utilitarian countertop material into the centerpiece of luxury interior design in Indian bungalows and high-end apartments. As we progress through 2026, the preference in major cities like Mumbai, Delhi NCR, and Bangalore has shifted dramatically toward bold, sculptural stone selections with high-contrast veining.
 
-### 1. The Renaissance of Book-Matching
-Book-matching involves pairing adjacent slabs cut from the exact same marble block so that their veining mirrors each other like an open book. This technique creates mesmerizing butterfly patterns across kitchen waterfalls and feature walls.
+1. The Renaissance of Book-Matching
+Book-matching involves pairing adjacent slabs cut from the exact same marble block so that their veining mirrors each other like an open book. This technique is highly favored for premium home mandirs, lobby double-height accent walls, and living room floor spreads across luxury estates in Rajasthan and Delhi.
 
-### 2. Warm Gold Veining Over Monochromatic Grey
-While cool grey Statuario dominated the previous decade, warm honey and champagne tones—exemplified by Calacatta Gold Oro Extra—are now taking center stage in high-end residential estates.
+2. Warm Gold Veining Over Monochromatic Grey
+While cool grey Statuario dominated luxury Indian residential projects in the previous decade, warm honey and champagne tones—exemplified by Calacatta Gold Oro Extra—are now taking center stage, adding an organic, sun-washed warmth to premium drawing rooms.
 
-### 3. Sintered Ultra-Thin Porcelain Facades
-Architects are increasingly incorporating lightweight porcelain sintered slabs into outdoor living spaces and high-rise apartment exterior facades for zero-fading weather endurance.`,
+3. Sintered Ultra-Thin Porcelain Facades
+Architects are increasingly incorporating lightweight porcelain sintered slabs into outdoor terrace lounges and high-rise apartment exterior balconies in Mumbai and Bangalore for zero-fading endurance against severe tropical monsoons.`,
     image: 'img1.jpeg',
     tags: ['Marble', 'Calacatta', 'Bookmatching', 'Interior Design']
   },
@@ -270,15 +270,15 @@ Architects are increasingly incorporating lightweight porcelain sintered slabs i
     category: 'Material Guide',
     readTime: '8 min read',
     date: 'June 24, 2026',
-    author: 'Dr. Alessandro Conti',
+    author: 'Shivam suthar',
     authorRole: 'Senior Petrographer & Quarry Director',
     summary: 'Understanding the geological differences between metamorphic marble and quartzite to choose stone that balances delicate beauty with heavy culinary utility.',
     content: `Choosing between natural marble and quartzite for a high-traffic kitchen island is one of the most critical decisions in high-end residential architectural projects.
 
-### The Geology of Quartzite
+The Geology of Quartzite
 Unlike marble, which is composed primarily of calcium carbonate, quartzite originates as pure quartz sandstone that undergoes intense tectonic heat and pressure. The result is a stone rated 7 on the Mohs hardness scale—harder than steel knife blades.
 
-### Acid Resistance & Etching
+Acid Resistance & Etching
 Marble reacts with lemons, wine, and acidic vinegar, requiring periodic sealant maintenance. Quartzite, by contrast, is completely chemically inert to culinary acids, preserving its factory polish effortlessly.`,
     image: 'img2.jpeg',
     tags: ['Quartzite', 'Kitchen Countertops', 'Material Science', 'Maintenance']
@@ -290,14 +290,14 @@ Marble reacts with lemons, wine, and acidic vinegar, requiring periodic sealant 
     category: 'Maintenance',
     readTime: '5 min read',
     date: 'May 12, 2026',
-    author: 'Matteo Rossi',
+    author: 'Bhavesh soni',
     authorRole: 'Master Stone Mason',
     summary: 'Expert techniques used by museum stone conservators to clean, seal, and polish luxury natural marble and exotic granite surfaces.',
     content: `Proper care ensures natural marble and granite age gracefully over centuries. Here is our master stone care protocol.
 
-1. **pH-Neutral Cleaners Only**: Never use ammonia, bleach, or vinegar on natural calcite marble. Always use specialized pH-neutral stone soaps.
-2. **Penetrating Hydrophobic Sealers**: Apply fluoropolymer sealers once every 12 to 18 months to create a microscopic barrier against oil and water stains.
-3. **Prompt Spill Cleanup**: Wipe up wine, coffee, or citrus drips immediately using soft microfiber cloths.`,
+1. pH-Neutral Cleaners Only : Never use ammonia, bleach, or vinegar on natural calcite marble. Always use specialized pH-neutral stone soaps.
+2. Penetrating Hydrophobic Sealers: Apply fluoropolymer sealers once every 12 to 18 months to create a microscopic barrier against oil and water stains.
+3. Prompt Spill Cleanup: Wipe up wine, coffee, or citrus drips immediately using soft microfiber cloths.`,
     image: 'img3.jpeg',
     tags: ['Stone Care', 'Sealing', 'Marble Maintenance']
   }
