@@ -27,7 +27,7 @@ export const SlabInspectorModal: React.FC = () => {
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 bg-black/80 backdrop-blur-md overflow-y-auto">
+      <div className="fixed inset-0 z-50 overflow-y-auto no-scrollbar scrollbar-none bg-black/80 backdrop-blur-md flex items-start justify-center p-2 sm:p-6 md:p-8">
         <div
           className="fixed inset-0"
           onClick={() => setSelectedSlabForModal(null)}

@@ -152,10 +152,13 @@ export const ProductDetailsPage: React.FC = () => {
             <div className="space-y-3 pt-6 border-t border-gray-200 dark:border-gray-800">
               <div className="grid grid-cols-2 gap-3">
                 <button
-                  onClick={() => addSampleToCart(slab)}
+                  onClick={() => {
+                    addSampleToCart(slab);
+                    navigate('/booking-box');
+                  }}
                   className="py-3 px-4 rounded-xl border border-[#C8A96A] text-[#C8A96A] hover:bg-[#C8A96A]/10 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                 >
-                  <Package className="w-4 h-4" /> Request Sample Box
+                  <Package className="w-4 h-4" /> Booking Box
                 </button>
                 <button
                   onClick={handleHold}

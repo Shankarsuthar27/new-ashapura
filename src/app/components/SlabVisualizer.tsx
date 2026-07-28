@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { SLABS_DATA, StoneSlab } from '../data/stoneData';
 import { useStone } from '../context/StoneContext';
 import { Eye, Layers, Sun, Check, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -34,6 +35,7 @@ const ROOM_PRESETS = [
 
 export const SlabVisualizer: React.FC = () => {
   const { slabs, setSelectedSlabForModal, addSampleToCart, openConsultationWithSlab } = useStone();
+  const navigate = useNavigate();
   const [activeRoom, setActiveRoom] = useState(ROOM_PRESETS[0]);
   const [selectedSlab, setSelectedSlab] = useState<StoneSlab>(slabs[0] || SLABS_DATA[0]);
   const [selectedFinish, setSelectedFinish] = useState('Polished');
@@ -227,10 +229,13 @@ export const SlabVisualizer: React.FC = () => {
             {/* Actions */}
             <div className="space-y-3 pt-4 border-t border-white/10">
               <button
-                onClick={() => addSampleToCart(selectedSlab)}
+                onClick={() => {
+                  addSampleToCart(selectedSlab);
+                  navigate('/booking-box');
+                }}
                 className="w-full py-3 rounded-xl border border-[#C8A96A] text-[#C8A96A] hover:bg-[#C8A96A]/10 text-xs font-bold uppercase tracking-wider transition-all"
               >
-                Request 4"x4" Sample Box
+                Booking Box
               </button>
               <button
                 onClick={() => openConsultationWithSlab(selectedSlab)}

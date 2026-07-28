@@ -6,7 +6,6 @@ import { Footer } from './components/Footer';
 import { ToastContainer } from './components/ToastContainer';
 import { SearchModal } from './components/SearchModal';
 import { SlabInspectorModal } from './components/SlabInspectorModal';
-import { SampleDrawer } from './components/SampleDrawer';
 import { HomePage } from './pages/HomePage';
 import { ProductsPage } from './pages/ProductsPage';
 import { CategoryPage } from './pages/CategoryPage';
@@ -15,6 +14,7 @@ import { ProductDescriptionDemoPage } from './pages/ProductDescriptionDemoPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { AdminPage } from './pages/AdminPage';
+import { BookingBoxPage } from './pages/BookingBoxPage';
 
 import { FloatingWhatsAppButton } from './components/FloatingWhatsAppButton';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -38,6 +38,7 @@ export default function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/admin" element={<AdminPage />} />
               <Route path="/journal" element={<HomePage />} />
+              <Route path="/booking-box" element={<BookingBoxPage />} />
             </Routes>
           </main>
           <Footer />
@@ -45,7 +46,6 @@ export default function App() {
           {/* Global Interactive Overlays */}
           <SearchModal />
           <SlabInspectorModal />
-          <SampleDrawer />
           <ToastContainer />
           <FloatingWhatsAppButton />
         </div>

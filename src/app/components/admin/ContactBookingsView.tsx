@@ -67,7 +67,7 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Sub Tabs */}
-      <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 pb-3">
+      <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto no-scrollbar scrollbar-none whitespace-nowrap">
         <button
           onClick={() => setActiveSubTab('bookings')}
           className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
@@ -98,7 +98,7 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
               : 'text-gray-500 hover:text-gray-800 dark:hover:text-white'
           }`}
         >
-          <ClipboardList className="w-4 h-4" /> Sample Requests ({sampleOrders.length})
+          <ClipboardList className="w-4 h-4" /> Booking Boxes ({sampleOrders.length})
         </button>
       </div>
 
@@ -281,17 +281,17 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
         </div>
       )}
 
-      {/* Sub Tab: Sample box orders (Reused WhatsApp order display log) */}
+      {/* Sub Tab: Booking box orders (Reused WhatsApp order display log) */}
       {activeSubTab === 'samples' && (
         <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-xl space-y-6">
           <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3">
-            <h3 className="font-serif-luxury text-lg font-bold">Luxury Swatch Box Order Logs</h3>
+            <h3 className="font-serif-luxury text-lg font-bold">Luxury Booking Box Order Logs</h3>
           </div>
 
           {sampleOrders.length === 0 ? (
             <div className="text-center py-16 text-gray-400 space-y-2 text-xs">
               <Mail className="w-8 h-8 mx-auto" />
-              <p>No swatch presentation boxes ordered yet.</p>
+              <p>No Booking Boxes ordered yet.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -348,7 +348,7 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
                       </button>
                       <a
                         href={`https://wa.me/919974617657?text=${encodeURIComponent(
-                          `Following up on sample box ${order.id}`
+                          `Following up on booking box ${order.id}`
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"

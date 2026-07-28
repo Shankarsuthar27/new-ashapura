@@ -67,9 +67,9 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('aurelia_theme');
       if (saved) return saved === 'dark';
-      return true; // Default to sleek luxury dark mode
+      return false; // Default to white theme
     }
-    return true;
+    return false;
   });
 
   const [slabs, setSlabs] = useState<StoneSlab[]>(loadInitialSlabs);
@@ -168,17 +168,17 @@ export const StoneProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const addSampleToCart = (slab: StoneSlab) => {
     if (sampleCart.some(item => item.id === slab.id)) {
-      showToast(`${slab.name} is already in your sample box.`, 'info');
+      showToast(`${slab.name} is already in your Booking Box.`, 'info');
       setIsSampleDrawerOpen(true);
       return;
     }
     if (sampleCart.length >= 4) {
-      showToast('Maximum 4 sample chips per complimentary luxury sample box.', 'info');
+      showToast('Maximum 4 sample chips per complimentary Booking Box.', 'info');
       setIsSampleDrawerOpen(true);
       return;
     }
     setSampleCart(prev => [...prev, slab]);
-    showToast(`Added ${slab.name} sample to your presentation box!`, 'success');
+    showToast(`Added ${slab.name} to your Booking Box!`, 'success');
     setIsSampleDrawerOpen(true);
   };
 

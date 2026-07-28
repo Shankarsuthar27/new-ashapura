@@ -67,7 +67,7 @@ export const SampleDrawer: React.FC = () => {
 
     // 3. Format WhatsApp Message
     const chipsList = sampleCart.map((item, idx) => `• ${item.name} (${item.category})`).join('\n');
-    const messageText = `Hi Ashapura Granite, I would like to order a complimentary Luxury Sample Box.
+    const messageText = `Hi Ashapura Granite, I would like to order a complimentary Luxury Booking Box.
 
 *Shipping Details:*
 • Name: ${formData.name}
@@ -87,7 +87,7 @@ Thank you!`;
     // 4. Trigger dispatch animations and open WhatsApp
     setIsSubmitted(true);
     setTimeout(() => {
-      showToast('Sample request saved! Opening WhatsApp...', 'success');
+      showToast('Booking Box request saved! Opening WhatsApp...', 'success');
       clearSampleCart();
       setIsSubmitted(false);
       setIsSampleDrawerOpen(false);
@@ -114,7 +114,7 @@ Thank you!`;
               <div className="flex items-center gap-3">
                 <Package className="w-6 h-6 text-[#C8A96A]" />
                 <div>
-                  <h3 className="font-serif-luxury text-xl font-bold">Luxury Sample Box</h3>
+                  <h3 className="font-serif-luxury text-xl font-bold">Luxury Booking Box</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Complimentary 4"x4" stone chips ({sampleCart.length}/4 items)
                   </p>
@@ -135,7 +135,7 @@ Thank you!`;
                   <div className="w-16 h-16 rounded-full bg-[#C8A96A]/10 text-[#C8A96A] flex items-center justify-center mx-auto">
                     <Package className="w-8 h-8" />
                   </div>
-                  <h4 className="font-serif-luxury text-lg font-semibold">Your Sample Box is Empty</h4>
+                  <h4 className="font-serif-luxury text-lg font-semibold">Your Booking Box is Empty</h4>
                   <p className="text-xs text-gray-500 dark:text-gray-400 max-w-xs mx-auto">
                     Browse our luxury slab inventory and click "Request Sample" to curate up to 4 real stone chips.
                   </p>
@@ -145,7 +145,7 @@ Thank you!`;
                   <div className="w-16 h-16 rounded-full bg-[#C8A96A]/20 text-[#C8A96A] flex items-center justify-center mx-auto animate-pulse">
                     <Check className="w-8 h-8" />
                   </div>
-                  <h4 className="font-serif-luxury text-xl font-bold text-[#C8A96A]">Dispatching Sample Box...</h4>
+                  <h4 className="font-serif-luxury text-xl font-bold text-[#C8A96A]">Dispatching Booking Box...</h4>
                   <p className="text-sm text-gray-500">Preparing your custom stone swatches with specifier guides.</p>
                 </div>
               ) : (

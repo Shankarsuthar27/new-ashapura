@@ -65,7 +65,7 @@ export const CategoryPage: React.FC = () => {
             Available {category.name} Slab Bundles
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {categorySlabs.map((slab, idx) => (
               <motion.div
                 key={slab.id}
@@ -98,39 +98,11 @@ export const CategoryPage: React.FC = () => {
                     >
                       {slab.name}
                     </h4>
-                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-2 line-clamp-2">
-                      {slab.description}
-                    </p>
-                    {slab.longDescription && (
-                      <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-1 line-clamp-3 leading-relaxed italic border-l-2 border-[#C8A96A]/30 pl-2">
-                        {slab.longDescription}
-                      </p>
-                    )}
 
-                    {slab.specifications && (
-                      <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-800 grid grid-cols-2 gap-x-4 gap-y-2 text-[10px]">
-                        <div>
-                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Comp. Strength</span>
-                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.compressiveStrength}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Water Absorption</span>
-                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.waterAbsorption}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Density</span>
-                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.density}</span>
-                        </div>
-                        <div>
-                          <span className="text-gray-400 block uppercase tracking-wider text-[8px] font-semibold">Flex. Strength</span>
-                          <span className="font-medium text-gray-800 dark:text-gray-200">{slab.specifications.flexuralStrength}</span>
-                        </div>
-                      </div>
-                    )}
                   </div>
 
                   <div className="pt-4 border-t border-gray-200 dark:border-gray-800 space-y-2">
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 min-[375px]:grid-cols-2 gap-2">
                       <button
                         onClick={() => addSampleToCart(slab)}
                         className="py-2.5 px-3 rounded-xl border border-gray-300 dark:border-gray-700 hover:border-[#C8A96A] text-xs font-semibold flex items-center justify-center gap-1.5 text-gray-700 dark:text-gray-300 transition-colors"
@@ -146,7 +118,7 @@ export const CategoryPage: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 min-[375px]:grid-cols-2 gap-2">
                       <a
                         href={`https://wa.me/919974617657?text=${encodeURIComponent(`Hi Ashapura Tiles & Granite, I am interested in ${slab.name} (${slab.category}).`)}`}
                         target="_blank"

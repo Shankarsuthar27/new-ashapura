@@ -3,9 +3,9 @@ import { useStone } from '../context/StoneContext';
 import { StoneSlab } from '../data/stoneData';
 import {
   LayoutDashboard, List, Plus, ClipboardList, ShieldAlert,
-  Layers, Calendar, Users, Globe, Image as ImageIcon,
+  Layers, Calendar, Users, Image as ImageIcon,
   Settings, LogOut, ChevronLeft, ChevronRight, Bell,
-  Volume2, VolumeX, Command, Menu, X, CheckCircle2,
+  Command, Menu, X, CheckCircle2,
   Trash2, Edit3, Loader2, AlertCircle, Sparkles, Folder
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
@@ -18,9 +18,9 @@ import { ProductManagementView } from '../components/admin/ProductManagementView
 import { InventoryView } from '../components/admin/InventoryView';
 import { CategoriesBrandsView } from '../components/admin/CategoriesBrandsView';
 import { ContactBookingsView } from '../components/admin/ContactBookingsView';
-import { SEOPanelView } from '../components/admin/SEOPanelView';
+
 import { AuditLogsView } from '../components/admin/AuditLogsView';
-import { SettingsView } from '../components/admin/SettingsView';
+
 
 function compressImage(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -73,11 +73,12 @@ export const AdminPage: React.FC = () => {
   // Authentication & Navigation Tabs
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => getAdminAuth());
   const [activeTab, setActiveTab] = useState<
-    'dashboard' | 'inventory' | 'add' | 'stock' | 'categories' | 'bookings' | 'users' | 'seo' | 'media' | 'logs' | 'settings'
+    'dashboard' | 'inventory' | 'add' | 'stock' | 'categories' | 'bookings' | 'logs'
   >('dashboard');
 
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
 
   // Command Palette
   const [showCommandPalette, setShowCommandPalette] = useState(false);
@@ -127,37 +128,12 @@ export const AdminPage: React.FC = () => {
     }
   }, [activeTab]);
 
-  // Web Audio Synth Chime
-  const playNotificationSound = () => {
-    if (!soundEnabled) return;
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(587.33, ctx.currentTime); // D5
-      osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12); // A5
-
-      gain.gain.setValueAtTime(0.08, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.35);
-
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.35);
-    } catch (err) {
-      console.warn('AudioContext failed:', err);
-    }
-  };
-
   // Add Notification
   const triggerNotification = (text: string) => {
     setNotifications(prev => [
       { id: Math.random().toString(36).substring(2, 9), text, time: 'Just now', read: false },
       ...prev
     ]);
-    playNotificationSound();
   };
 
   const handleDeleteOrder = (orderId: string) => {
@@ -330,9 +306,7 @@ export const AdminPage: React.FC = () => {
     { name: 'Stock Margin Analysis', tab: 'stock' },
     { name: 'Nested Categories & Brands', tab: 'categories' },
     { name: 'Bookings & Sample Orders', tab: 'bookings' },
-    { name: 'SEO & Search Engine Snippets', tab: 'seo' },
-    { name: 'Activity Trail Logs', tab: 'logs' },
-    { name: 'Portal Website Settings', tab: 'settings' }
+    { name: 'Activity Trail Logs', tab: 'logs' }
   ];
 
   const filteredCommands = navigationCommands.filter(cmd =>
@@ -343,9 +317,19 @@ export const AdminPage: React.FC = () => {
     <div className="min-h-screen bg-[#F9FAFB] dark:bg-[#0A0A0C] text-gray-900 dark:text-[#E5E5E7] flex flex-row overflow-hidden font-sans-luxury">
       
       {/* ───────────────── COLLAPSIBLE SIDEBAR ───────────────── */}
-      <aside className={`border-r border-gray-250 dark:border-gray-800/80 bg-white dark:bg-[#0F0F12] flex flex-col justify-between transition-all duration-300 z-30 shrink-0 ${
-        isSidebarCollapsed ? 'w-20' : 'w-64'
-      }`}>
+      {/* Mobile Sidebar backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      <aside className={`fixed inset-y-0 left-0 z-50 lg:relative lg:z-30 border-r border-gray-250 dark:border-gray-800/80 bg-white dark:bg-[#0F0F12] flex flex-col justify-between transition-all duration-300 shrink-0 ${
+        isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+      } ${
+        isSidebarCollapsed ? 'lg:w-20' : 'lg:w-64'
+      } w-64`}>
         <div className="flex flex-col flex-1 overflow-y-auto">
           {/* Logo Brand Title */}
           <div className="p-6 border-b border-gray-200 dark:border-gray-800/80 flex items-center justify-between">
@@ -354,11 +338,19 @@ export const AdminPage: React.FC = () => {
                 ASHAPURA ATELIER
               </span>
             )}
+            {/* Collapse button - hidden on mobile, only desktop */}
             <button
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 mx-auto"
+              className="hidden lg:block p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 mx-auto"
             >
               {isSidebarCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            </button>
+            {/* Close button for mobile menu */}
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400"
+            >
+              <X className="w-5 h-5" />
             </button>
           </div>
 
@@ -371,9 +363,7 @@ export const AdminPage: React.FC = () => {
               { id: 'stock', label: 'Stock & Margin', icon: ClipboardList },
               { id: 'categories', label: 'Categories & Brands', icon: Layers },
               { id: 'bookings', label: 'Bookings & Orders', icon: Calendar },
-              { id: 'seo', label: 'SEO Manager', icon: Globe },
-              { id: 'logs', label: 'Activity Logs', icon: ShieldAlert },
-              { id: 'settings', label: 'Settings', icon: Settings }
+              { id: 'logs', label: 'Activity Logs', icon: ShieldAlert }
             ].map(item => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -383,7 +373,7 @@ export const AdminPage: React.FC = () => {
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id as any);
-                    playNotificationSound();
+                    setIsMobileMenuOpen(false); // Close drawer on link click
                   }}
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition-all ${
                     isActive
@@ -393,7 +383,7 @@ export const AdminPage: React.FC = () => {
                   title={item.label}
                 >
                   <Icon className="w-4.5 h-4.5 shrink-0" />
-                  {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
+                  <span className={`${isSidebarCollapsed ? 'lg:hidden' : ''} truncate`}>{item.label}</span>
                 </button>
               );
             })}
@@ -404,13 +394,16 @@ export const AdminPage: React.FC = () => {
         <div className="p-4 border-t border-gray-200 dark:border-gray-800/80">
           <button
             onClick={() => {
-              if (confirm('Log out from Admin portal?')) handleLogout();
+              if (confirm('Log out from Admin portal?')) {
+                handleLogout();
+                setIsMobileMenuOpen(false);
+              }
             }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-red-500 hover:bg-red-500/5 transition-all"
             title="Logout"
           >
             <LogOut className="w-4.5 h-4.5 shrink-0" />
-            {!isSidebarCollapsed && <span className="truncate">Logout</span>}
+            <span className={`${isSidebarCollapsed ? 'lg:hidden' : ''} truncate`}>Logout</span>
           </button>
         </div>
       </aside>
@@ -423,7 +416,7 @@ export const AdminPage: React.FC = () => {
           <div className="flex items-center gap-4">
             {/* Mobile Sidebar menu toggle */}
             <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden text-gray-500"
             >
               <Menu className="w-5 h-5" />
@@ -445,14 +438,7 @@ export const AdminPage: React.FC = () => {
               <kbd className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-[9px]">Ctrl+K</kbd>
             </button>
 
-            {/* Sound Toggle */}
-            <button
-              onClick={() => setSoundEnabled(!soundEnabled)}
-              className="p-2 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A] text-gray-400 hover:text-gray-700 dark:hover:text-white transition-all"
-              title={soundEnabled ? 'Mute portal sounds' : 'Unmute portal sounds'}
-            >
-              {soundEnabled ? <Volume2 className="w-4.5 h-4.5 text-[#C8A96A]" /> : <VolumeX className="w-4.5 h-4.5 text-gray-450" />}
-            </button>
+
 
             {/* Notification Bell */}
             <div className="relative">
@@ -545,17 +531,12 @@ export const AdminPage: React.FC = () => {
               />
             )}
 
-            {activeTab === 'seo' && (
-              <SEOPanelView key="seo" />
-            )}
+
 
             {activeTab === 'logs' && (
               <AuditLogsView key="logs" />
             )}
 
-            {activeTab === 'settings' && (
-              <SettingsView key="settings" />
-            )}
 
             {/* TAB 1: ADD / EDIT PRODUCT FORM */}
             {activeTab === 'add' && (
@@ -978,7 +959,6 @@ export const AdminPage: React.FC = () => {
                         setActiveTab(cmd.tab as any);
                         setShowCommandPalette(false);
                         setCommandQuery('');
-                        playNotificationSound();
                       }}
                       className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-[#1A1A1F] text-left text-gray-700 dark:text-gray-300 font-bold transition-all"
                     >

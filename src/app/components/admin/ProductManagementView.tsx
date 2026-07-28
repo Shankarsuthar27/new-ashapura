@@ -240,8 +240,10 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
       </div>
 
       {/* Main Inventory Table */}
+      {/* Main Inventory Table/Cards Grid */}
       <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl shadow-xl overflow-hidden">
-        <div className="overflow-x-auto">
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-gray-50 dark:bg-[#17171C] text-gray-500 dark:text-gray-400 uppercase tracking-wider font-semibold border-b border-gray-200 dark:border-gray-800">
               <tr>
@@ -374,6 +376,98 @@ export const ProductManagementView: React.FC<ProductManagementViewProps> = ({
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile/Tablet Card List View */}
+        <div className="block md:hidden divide-y divide-gray-200 dark:divide-gray-800 p-4 space-y-4">
+          {filteredSlabs.length === 0 ? (
+            <p className="py-6 text-center text-gray-400">No products found matching filters.</p>
+          ) : (
+            filteredSlabs.map(slab => {
+              const isSelected = selectedIds.includes(slab.id);
+              const status = slabStatuses[slab.id] || 'published';
+
+              return (
+                <div key={slab.id} className="pt-4 first:pt-0 space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <button onClick={() => toggleSelectOne(slab.id)} className="text-gray-400">
+                        {isSelected ? (
+                          <CheckSquare className="w-4 h-4 text-[#C8A96A]" />
+                        ) : (
+                          <Square className="w-4 h-4" />
+                        )}
+                      </button>
+                      <img
+                        src={slab.image}
+                        alt={slab.name}
+                        className="w-12 h-12 rounded-xl object-cover border border-gray-250 dark:border-gray-700 shadow-sm flex-shrink-0"
+                      />
+                      <div>
+                        <h4 className="font-bold text-sm text-gray-900 dark:text-white">{slab.name}</h4>
+                        <p className="text-[10px] text-gray-400">{slab.color} • Bundle {slab.bundleNumber}</p>
+                      </div>
+                    </div>
+                    <span
+                      className={`px-2 py-0.5 rounded text-[8px] font-bold uppercase ${
+                        status === 'published'
+                          ? 'bg-emerald-500/10 text-emerald-500'
+                          : status === 'draft'
+                          ? 'bg-gray-500/10 text-gray-400'
+                          : 'bg-amber-500/10 text-amber-500'
+                      }`}
+                    >
+                      {status}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-2 text-[10px] bg-gray-50 dark:bg-[#1A1A1F] p-3 rounded-xl">
+                    <div>
+                      <span className="text-gray-400 block uppercase text-[8px] font-semibold">Category</span>
+                      <span className="font-semibold text-gray-850 dark:text-gray-200">{slab.category}</span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 block uppercase text-[8px] font-semibold">Price</span>
+                      <span className="font-bold text-[#C8A96A]">₹{slab.price ?? 150} <span className="text-gray-450 font-normal">/ sqft</span></span>
+                    </div>
+                    <div>
+                      <span className="text-gray-400 block uppercase text-[8px] font-semibold">Origin</span>
+                      <span className="font-semibold text-gray-850 dark:text-gray-200 block truncate">{slab.origin}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-gray-150 dark:border-gray-800 pt-2 flex-wrap gap-2">
+                    <span className="text-[9px] text-gray-400">Dim: {slab.dimensions}</span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => onStartEdit(slab)}
+                        className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-[#202026] text-gray-700 dark:text-gray-300 hover:text-[#C8A96A] text-[10px] font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <Edit3 className="w-3 h-3" /> Edit
+                      </button>
+                      <button
+                        onClick={() => handleDuplicate(slab)}
+                        className="px-3 py-1.5 rounded-lg bg-gray-100 dark:bg-[#202026] text-gray-700 dark:text-gray-300 hover:text-emerald-500 text-[10px] font-bold flex items-center gap-1 transition-colors"
+                      >
+                        <Copy className="w-3 h-3" /> Copy
+                      </button>
+                      <button
+                        onClick={async () => {
+                          if (confirm('Delete this product?')) {
+                            setTrashBin(prev => [...prev, slab]);
+                            await onDeleteSlab(slab.id);
+                          }
+                        }}
+                        className="px-3 py-1.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-500 text-[10px] font-bold flex items-center gap-1 border border-red-500/10 transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3" /> Del
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layers, Plus, Trash2, Globe, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
+import { Layers, Plus, Trash2, Sparkles, CheckCircle2, ChevronRight } from 'lucide-react';
 import { STONE_CATEGORIES, StoneCategory } from '../../data/stoneData';
 
 export const CategoriesBrandsView: React.FC = () => {
@@ -121,38 +121,7 @@ export const CategoriesBrandsView: React.FC = () => {
           </div>
         </div>
 
-        {/* SEO Category settings */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-xl space-y-4">
-          <h4 className="font-serif-luxury text-base font-bold flex items-center gap-1.5">
-            <Globe className="w-4 h-4 text-[#C8A96A]" /> Search Engine Optimization (SEO)
-          </h4>
-          <div className="space-y-3 text-xs">
-            <div>
-              <label className="text-gray-400 block mb-1">Meta Title Tag</label>
-              <input
-                type="text"
-                defaultValue={`${categories.find(c => c.id === selectedCatId)?.name} Slabs & Tiles | Ashapura Granite`}
-                className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 focus:outline-none focus:border-[#C8A96A]"
-              />
-            </div>
-            <div>
-              <label className="text-gray-400 block mb-1">Meta Description</label>
-              <textarea
-                rows={2}
-                defaultValue={`Explore the absolute premium collection of imported ${categories.find(c => c.id === selectedCatId)?.name?.toLowerCase()} for architectural floors and kitchen countertops.`}
-                className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl p-3 focus:outline-none focus:border-[#C8A96A]"
-              />
-            </div>
-            <div>
-              <label className="text-gray-400 block mb-1">Focus Keywords</label>
-              <input
-                type="text"
-                defaultValue="luxury stone slabs, premium tiles, granite, import marble"
-                className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-200 dark:border-gray-800 rounded-xl px-3 py-2 focus:outline-none focus:border-[#C8A96A]"
-              />
-            </div>
-          </div>
-        </div>
+
       </div>
     </div>
   );

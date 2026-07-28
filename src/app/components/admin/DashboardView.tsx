@@ -81,10 +81,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
           <p className="text-[10px] text-gray-400 mt-1">Stone collection tags</p>
         </div>
 
-        {/* KPI: Sample Requests */}
+        {/* KPI: Booking Boxes */}
         <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Sample Orders</span>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Booking Boxes</span>
             <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
               <TrendingUp className="w-5 h-5" />
             </div>
@@ -95,7 +95,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
               <ArrowUpRight className="w-3.5 h-3.5" /> +24%
             </span>
           </div>
-          <p className="text-[10px] text-gray-400 mt-1">Presentation boxes requested</p>
+          <p className="text-[10px] text-gray-400 mt-1">Booking boxes requested</p>
         </div>
 
         {/* KPI: Visitors Analytics */}

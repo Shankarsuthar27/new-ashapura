@@ -199,9 +199,9 @@ export const Navbar: React.FC = () => {
 
             {/* Cart Box */}
             <button
-              onClick={() => setIsSampleDrawerOpen(true)}
+              onClick={() => navigate('/booking-box')}
               className="relative p-2 text-gray-700 dark:text-gray-300 hover:text-[#C8A96A] transition-colors"
-              title="Sample Box"
+              title="Booking Box"
             >
               <Package className="w-4 h-4" />
               {sampleCart.length > 0 && (
