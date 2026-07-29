@@ -634,8 +634,11 @@ export const AdminPage: React.FC = () => {
                         type="number"
                         min="0"
                         placeholder="e.g. 50"
-                        value={formData.inStockSlabs ?? 0}
-                        onChange={e => setFormData({ ...formData, inStockSlabs: parseInt(e.target.value) || 0 })}
+                        value={formData.inStockSlabs !== undefined && formData.inStockSlabs !== null ? formData.inStockSlabs : ''}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setFormData({ ...formData, inStockSlabs: val === '' ? undefined : parseInt(val) || 0 });
+                        }}
                         className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
                       />
                     </div>
@@ -649,8 +652,11 @@ export const AdminPage: React.FC = () => {
                         required
                         min="0"
                         placeholder="e.g. 150"
-                        value={formData.price ?? ''}
-                        onChange={e => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                        value={formData.price !== undefined && formData.price !== null ? formData.price : ''}
+                        onChange={e => {
+                          const val = e.target.value;
+                          setFormData({ ...formData, price: val === '' ? undefined : parseFloat(val) || 0 });
+                        }}
                         className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
                       />
                     </div>

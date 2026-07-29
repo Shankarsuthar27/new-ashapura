@@ -24,7 +24,7 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ slabs, onUpdateSla
 
   // Stock update state
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [newStockVal, setNewStockVal] = useState<number>(0);
+  const [newStockVal, setNewStockVal] = useState<number | ''>(0);
 
   // Stock movement audit logs
   const [stockLogs, setStockLogs] = useState<Array<{ id: string; date: string; name: string; oldStock: number; newStock: number; type: 'in' | 'out' }>>([]);
@@ -141,7 +141,10 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ slabs, onUpdateSla
                           <input
                             type="number"
                             value={newStockVal}
-                            onChange={e => setNewStockVal(parseInt(e.target.value) || 0)}
+                            onChange={e => {
+                              const val = e.target.value;
+                              setNewStockVal(val === '' ? '' : parseInt(val) || 0);
+                            }}
                             className="w-16 bg-gray-100 dark:bg-[#1E1E22] border border-[#C8A96A] text-center rounded px-1.5 py-0.5 text-xs focus:outline-none"
                           />
                         ) : (

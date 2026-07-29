@@ -21,7 +21,7 @@ export const Hero: React.FC = () => {
         <img
           src="./main.jpeg"
           alt="Luxury Marble Slab Background"
-          className="w-full h-full object-cover scale-105 animate-pulse duration-[10000ms] opacity-75 brightness-90 contrast-125"
+          className="w-full h-full object-cover scale-105  opacity-75 brightness-90 contrast-125"
         />
         {/* Dark Luxury Vignette Overlays */}
         {/* <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/40 to-transparent" />
