@@ -169,6 +169,13 @@ export const Navbar: React.FC = () => {
             </button>
 
             <button
+              onClick={() => handleNavClick('/', 'contact')}
+              className="hover:text-[#C8A96A] transition-colors"
+            >
+              Contact
+            </button>
+
+            <button
               onClick={() => handleNavClick('/admin')}
               className="hover:text-[#C8A96A] transition-colors flex items-center gap-1"
             >
@@ -255,6 +262,12 @@ export const Navbar: React.FC = () => {
                 className="text-left py-2 border-b border-gray-100 dark:border-white/5 hover:text-[#C8A96A]"
               >
                 Choose Us
+              </button>
+              <button
+                onClick={() => handleNavClick('/', 'contact')}
+                className="text-left py-2 border-b border-gray-100 dark:border-white/5 hover:text-[#C8A96A]"
+              >
+                Contact
               </button>
               <button
                 onClick={() => handleNavClick('/admin')}

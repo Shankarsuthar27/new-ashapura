@@ -97,7 +97,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'Best Floor Tiles Available',
     image: './t1.jpeg',
     count: 140,
-    keyFeatures: ['Stain & Scratch Proof', 'Vitrified Body Strength', 'Ideal for Living Rooms & Entrances']
+    keyFeatures: []
   },
   {
     id: 'wall-tiles',
@@ -106,7 +106,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'Hand-glazed Moroccan zellige wall tiles, 3D ceramic accents, and high-gloss feature wall tiles designed for kitchens and bathrooms.',
     image: './tiles.jpg',
     count: 115,
-    keyFeatures: ['Glazed Color Depth', 'Water & Steam Impervious', 'Accent Walls & Backsplashes']
+    keyFeatures: []
   },
   {
     id: 'granite',
@@ -115,7 +115,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'All Types of Granites in best quality',
     image: './m1.jpeg',
     count: 98,
-    keyFeatures: ['Scratch & Heat Resistant', 'Zero Water Permeability', 'High-Traffic Kitchen Countertops']
+    keyFeatures: []
   },
   {
     id: 'marble',
@@ -124,7 +124,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'All Types of Marbles',
     image: './g1.jpeg',
     count: 124,
-    keyFeatures: ['Distinctive Veining', 'High Polish Luster', 'Ideal for Master Suites & Feature Walls']
+    keyFeatures: []
   },
   {
     id: 'sanitary-items',
@@ -133,7 +133,7 @@ export const STONE_CATEGORIES: StoneCategory[] = [
     description: 'All Sanitary items',
     image: './s.jpeg',
     count: 85,
-    keyFeatures: ['Antibacterial Glaze', 'Ultra-Quiet Flushing', 'Ergonomic Architectural Design']
+    keyFeatures: []
   }
 ];
 

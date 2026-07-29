@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
-  MessageSquare, Calendar, Mail, Trash2, CheckCircle2, XCircle,
-  Archive, AlertOctagon, Reply, FileSpreadsheet, Eye, ClipboardList
+  MessageSquare, Mail, Trash2,
+  Archive, AlertOctagon, Reply, Eye, ClipboardList
 } from 'lucide-react';
 
 interface ContactBookingsViewProps {
@@ -13,13 +13,8 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
   sampleOrders,
   onDeleteSampleOrder
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'bookings' | 'messages' | 'samples'>('bookings');
+  const [activeSubTab, setActiveSubTab] = useState<'messages' | 'samples'>('messages');
   
-  const [bookings, setBookings] = useState<any[]>([
-    { id: 'BOOK-4428', date: '2026-07-27', time: '11:00 AM', name: 'Kabir Dev', phone: '+91 9988776655', email: 'kabir@vancecap.com', status: 'Pending', material: 'Calacatta Oro Extra', notes: 'Needs book-matched waterfall slab selection.' },
-    { id: 'BOOK-3102', date: '2026-07-28', time: '03:30 PM', name: 'Alia Sen', phone: '+91 9876543210', email: 'alia.sen@designstudio.it', status: 'Approved', material: 'Amazonite Emerald Quartzite', notes: 'Virtual showroom tour requested.' }
-  ]);
-
   // Custom mock messages from the contact page
   const [messages, setMessages] = useState<any[]>([
     { id: 'MSG-884', date: '2026-07-26', name: 'Rajesh Sharma', email: 'rajesh@sharmabuilders.in', subject: 'Bulk Tiles Inquiry', message: 'Looking for vitrified floor tiles pricing for a 50-apartment residential project in Jalore.', status: 'unread', isSpam: false },
@@ -30,17 +25,6 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
   // Reply simulation state
   const [replyTarget, setReplyTarget] = useState<any | null>(null);
   const [replyText, setReplyText] = useState('');
-
-  // Booking action handlers
-  const handleUpdateBookingStatus = (id: string, status: 'Pending' | 'Approved' | 'Rejected' | 'Completed') => {
-    setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
-  };
-
-  const handleDeleteBooking = (id: string) => {
-    if (confirm('Delete this booking record?')) {
-      setBookings(prev => prev.filter(b => b.id !== id));
-    }
-  };
 
   // Message action handlers
   const handleToggleMessageRead = (id: string) => {
@@ -68,17 +52,6 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Sub Tabs */}
       <div className="flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto no-scrollbar scrollbar-none whitespace-nowrap">
-        <button
-          onClick={() => setActiveSubTab('bookings')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
-            activeSubTab === 'bookings'
-              ? 'bg-[#C8A96A] text-black shadow-md'
-              : 'text-gray-500 hover:text-gray-800 dark:hover:text-white'
-          }`}
-        >
-          <Calendar className="w-4 h-4" /> Consultation Bookings ({bookings.length})
-        </button>
-
         <button
           onClick={() => setActiveSubTab('messages')}
           className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1.5 ${
@@ -131,85 +104,6 @@ export const ContactBookingsView: React.FC<ContactBookingsViewProps> = ({
                 Send Email
               </button>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* Sub Tab: Bookings list */}
-      {activeSubTab === 'bookings' && (
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-xl space-y-6">
-          <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-3">
-            <h3 className="font-serif-luxury text-lg font-bold">Showroom Consultation Schedule</h3>
-            <button className="px-3 py-1.5 border border-gray-200 dark:border-gray-800 rounded-xl text-[10px] font-bold uppercase tracking-wider hover:border-[#C8A96A] transition-all flex items-center gap-1">
-              <FileSpreadsheet className="w-3.5 h-3.5" /> Export Spreadsheet
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            {bookings.map(b => (
-              <div
-                key={b.id}
-                className="bg-gray-50 dark:bg-[#19191D] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs"
-              >
-                <div className="space-y-1.5 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-[#C8A96A]">{b.id}</span>
-                    <span className="text-gray-400 font-mono">{b.date} at {b.time}</span>
-                    <span
-                      className={`px-2 py-0.5 rounded-md font-bold uppercase text-[9px] ${
-                        b.status === 'Completed'
-                          ? 'bg-emerald-500/10 text-emerald-500'
-                          : b.status === 'Approved'
-                          ? 'bg-blue-500/10 text-blue-500'
-                          : b.status === 'Rejected'
-                          ? 'bg-red-500/10 text-red-500'
-                          : 'bg-amber-500/10 text-amber-500'
-                      }`}
-                    >
-                      {b.status}
-                    </span>
-                  </div>
-                  <p className="font-bold text-sm text-gray-900 dark:text-white">
-                    {b.name} <span className="font-normal font-mono text-gray-500 text-xs">({b.email} • {b.phone})</span>
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 font-sans-luxury">
-                    <span className="text-gray-400 font-semibold uppercase text-[9px] mr-1">Stone Slab:</span> {b.material}
-                  </p>
-                  {b.notes && <p className="text-gray-450 italic mt-1 leading-relaxed">"{b.notes}"</p>}
-                </div>
-
-                <div className="flex flex-wrap items-center gap-2 self-stretch md:self-auto border-t md:border-t-0 pt-3 md:pt-0 border-gray-250 dark:border-gray-800">
-                  <button
-                    onClick={() => handleUpdateBookingStatus(b.id, 'Approved')}
-                    className="p-2 bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20 rounded-lg"
-                    title="Approve Booking"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleUpdateBookingStatus(b.id, 'Completed')}
-                    className="p-2 bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 rounded-lg"
-                    title="Mark Completed"
-                  >
-                    <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                  </button>
-                  <button
-                    onClick={() => handleUpdateBookingStatus(b.id, 'Rejected')}
-                    className="p-2 bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 rounded-lg"
-                    title="Reject Booking"
-                  >
-                    <XCircle className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDeleteBooking(b.id)}
-                    className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg"
-                    title="Delete Record"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       )}

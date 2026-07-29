@@ -46,18 +46,20 @@ export const CategoryPage: React.FC = () => {
         </div>
 
         {/* Category Key Features */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4">
-          <h3 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
-            {category.name} Key Performance Characteristics
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {category.keyFeatures.map((feat, i) => (
-              <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-[#1A1A1E] border border-gray-200 dark:border-gray-800">
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{feat}</span>
-              </div>
-            ))}
+        {category.keyFeatures && category.keyFeatures.length > 0 && (
+          <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-8 space-y-4">
+            <h3 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
+              {category.name} Key Performance Characteristics
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {category.keyFeatures.map((feat, i) => (
+                <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-gray-50 dark:bg-[#1A1A1E] border border-gray-200 dark:border-gray-800">
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{feat}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Slabs Grid */}
         <div className="space-y-6">

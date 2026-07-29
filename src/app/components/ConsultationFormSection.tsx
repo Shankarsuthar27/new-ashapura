@@ -136,7 +136,7 @@ export const ConsultationFormSection: React.FC = () => {
         Booking Sent via WhatsApp!
       </h4>
       <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs leading-relaxed">
-        Your booking details have been sent to our team on WhatsApp. We'll get back to you within 2 hours.
+        Your booking details have been sent to our team on WhatsApp. We'll get back to you within 30 minutes.
       </p>
 
       {/* Re-open WhatsApp button in case pop-up was blocked */}
@@ -357,7 +357,7 @@ export const ConsultationFormSection: React.FC = () => {
                   </div>
                   <div>
                     <span className="text-xs text-gray-400 uppercase tracking-wider block">Response Time</span>
-                    <span className="font-bold text-base">Within 2 Hours</span>
+                    <span className="font-bold text-base">30 min.</span>
                   </div>
                 </div>
               </div>
