@@ -47,7 +47,7 @@ export const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-serif-luxury text-sm sm:text-3xl md:text-3xl font-bold tracking-tight text-gray-900 max-w-5xl mx-auto leading-[1.1]"
+          className="font-serif-luxury text-sm sm:text-3xl md:text-3xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.1]"
         >
           Ashapura Premium Tiles & Granite at Unbeatable Prices. <br />
           <span className="gold-gradient-text italic font-normal">Stone Collection</span>
@@ -63,7 +63,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="flex flex-row sm:flex-row items-center justify-center gap-2 sm:gap-4 pt-2 sm:pt-4"
         >
-          <button
+          {/* <button
             onClick={handleScrollToCollections}
             className="w-auto px-4 py-2 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl gold-button text-[10px] sm:text-sm uppercase tracking-widest font-bold shadow-2xl flex items-center justify-center gap-2 group"
           >
@@ -76,7 +76,7 @@ export const Hero: React.FC = () => {
             className="w-auto px-4 py-2 sm:px-8 sm:py-4 rounded-lg sm:rounded-xl border border-white/30 hover:border-[#C8A96A] bg-black/40 hover:bg-white/10 backdrop-blur-md text-white text-[10px] sm:text-sm uppercase tracking-widest font-semibold transition-all duration-300 flex items-center justify-center gap-2"
           >
             <span>Book Consultation</span>
-          </button>
+          </button> */}
         </motion.div>
 
         {/* Floating Statistics Cards */}
@@ -86,7 +86,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.8, delay: 0.8 }}
           className="grid grid-cols-3 gap-1.5 sm:gap-2 max-w-xs sm:max-w-2xl mx-auto pt-2 sm:pt-5 text-left"
         >
-          <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
+          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
             <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
               <Layers className="w-3 h-3" />
             </div>
@@ -96,9 +96,9 @@ export const Hero: React.FC = () => {
                 In-Stock Slabs
               </span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
+          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
             <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
               <Award className="w-3 h-3" />
             </div>
@@ -108,9 +108,9 @@ export const Hero: React.FC = () => {
                 Quarry Master Experience
               </span>
             </div>
-          </div>
+          </div> */}
 
-          <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
+          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
             <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
               <ShieldCheck className="w-3 h-3" />
             </div>
@@ -120,7 +120,7 @@ export const Hero: React.FC = () => {
                 Global Projects Delivered
               </span>
             </div>
-          </div>
+          </div> */}
         </motion.div>
 
 
