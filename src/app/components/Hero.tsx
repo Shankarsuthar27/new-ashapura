@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStone } from '../context/StoneContext';
-import { ArrowRight, Award, Layers, ShieldCheck, ChevronDown } from 'lucide-react';
+import { ArrowRight, Award, ShieldCheck, ChevronDown } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router';
 import Slideshow from './ui/slideshow';
@@ -29,29 +29,21 @@ export const Hero: React.FC = () => {
       <div className="absolute top-1/3 left-1/4 w-80 h-80 bg-[#C8A96A]/15 rounded-full blur-3xl pointer-events-none animate-pulse" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#C8A96A]/10 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Top-Left Headline */}
+      <motion.div
+        initial={{ opacity: 0, x: -30 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="absolute top-5 sm:top-18 left-4 sm:left-8 lg:left-12 z-10 text-left max-w-[55%] sm:max-w-md"
+      >
+        <h1 className="font-serif-luxury text-sm sm:text-2xl md:text-3xl font-bold tracking-tight text-white leading-[1.15]">
+          Ashapura Premium Tiles &amp; Granite at Unbeatable Prices.<br />
+          <span className="gold-gradient-text italic font-normal">Stone Collection</span>
+        </h1>
+      </motion.div>
+
       {/* Hero Core Container */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 relative z-10 text-center space-y-3 sm:space-y-8">
-        {/* Luxury Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-         
-        >
-         
-         
-        </motion.div>
-
-        {/* Large Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="font-serif-luxury text-sm sm:text-3xl md:text-3xl font-bold tracking-tight text-white max-w-5xl mx-auto leading-[1.1]"
-        >
-          Ashapura Premium Tiles & Granite at Unbeatable Prices. <br />
-          <span className="gold-gradient-text italic font-normal">Stone Collection</span>
-        </motion.h1>
 
         {/* Subheadline */}
 
@@ -78,52 +70,6 @@ export const Hero: React.FC = () => {
             <span>Book Consultation</span>
           </button> */}
         </motion.div>
-
-        {/* Floating Statistics Cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-          className="grid grid-cols-3 gap-1.5 sm:gap-2 max-w-xs sm:max-w-2xl mx-auto pt-2 sm:pt-5 text-left"
-        >
-          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
-            <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
-              <Layers className="w-3 h-3" />
-            </div>
-            <div>
-              <span className="font-serif-luxury font-bold text-[11px] sm:text-base text-black block leading-tight">5000+</span>
-              <span className="text-[8px] sm:text-[10px] uppercase tracking-wider text-black font-semibold leading-tight">
-                In-Stock Slabs
-              </span>
-            </div>
-          </div> */}
-
-          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
-            <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
-              <Award className="w-3 h-3" />
-            </div>
-            <div>
-              <span className="font-serif-luxury font-bold text-[11px] sm:text-base text-black block leading-tight">25+ Years</span>
-              <span className="text-[8px] sm:text-[10px] uppercase tracking-wider text-black font-semibold leading-tight">
-                Quarry Master Experience
-              </span>
-            </div>
-          </div> */}
-
-          {/* <div className="glass-panel p-1.5 sm:p-2 rounded-lg border border-white/10 flex items-center gap-1.5 sm:gap-2 hover:border-[#C8A96A]/50 transition-all group">
-            <div className="hidden sm:flex w-7 h-7 rounded-md bg-[#C8A96A]/10 border border-[#C8A96A]/30 items-center justify-center text-[#C8A96A] shrink-0 group-hover:scale-110 transition-transform">
-              <ShieldCheck className="w-3 h-3" />
-            </div>
-            <div>
-              <span className="font-serif-luxury font-bold text-[11px] sm:text-base text-black block leading-tight">10,000+</span>
-              <span className="text-[8px] sm:text-[10px] uppercase tracking-wider text-gray-400 font-semibold leading-tight">
-                Global Projects Delivered
-              </span>
-            </div>
-          </div> */}
-        </motion.div>
-
-
 
         {/* Scroll Indicator */}
         <div className="pt-3 sm:pt-8 flex justify-center">

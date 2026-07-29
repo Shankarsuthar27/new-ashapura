@@ -228,32 +228,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({
                 </div>
               )}
 
-              {/* Technical Specifications Grid */}
-              {product.specifications && (
-                <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">
-                    Architectural Specifications
-                  </label>
-                  <div className="grid grid-cols-1 min-[340px]:grid-cols-2 gap-2 text-xs">
-                    <div className="bg-gray-50 dark:bg-[#1A1A20] p-3 rounded-xl border border-gray-150 dark:border-gray-800">
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Compressive Strength</span>
-                      <span className="font-bold text-[#0B1F44] dark:text-[#C8A96A]">{product.specifications.compressiveStrength}</span>
-                    </div>
-                    <div className="bg-gray-50 dark:bg-[#1A1A20] p-3 rounded-xl border border-gray-150 dark:border-gray-800">
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Water Absorption</span>
-                      <span className="font-bold text-[#0B1F44] dark:text-[#C8A96A]">{product.specifications.waterAbsorption}</span>
-                    </div>
-                    <div className="bg-gray-50 dark:bg-[#1A1A20] p-3 rounded-xl border border-gray-150 dark:border-gray-800">
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Density</span>
-                      <span className="font-bold text-[#0B1F44] dark:text-[#C8A96A]">{product.specifications.density}</span>
-                    </div>
-                    <div className="bg-gray-50 dark:bg-[#1A1A20] p-3 rounded-xl border border-gray-150 dark:border-gray-800">
-                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Flexural Strength</span>
-                      <span className="font-bold text-[#0B1F44] dark:text-[#C8A96A]">{product.specifications.flexuralStrength}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+
+
             </div>
 
             {/* Bottom Actions Area: Fixed at the base */}

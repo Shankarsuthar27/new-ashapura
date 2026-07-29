@@ -46,19 +46,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
   }, [slabs]);
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300">
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {/* KPI: Products */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</span>
-            <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Products</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <span className="text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{slabs.length}</span>
+          <div className="mt-3 sm:mt-4 flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{slabs.length}</span>
             <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-0.5">
               <ArrowUpRight className="w-3.5 h-3.5" /> +12%
             </span>
@@ -67,30 +67,30 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
         </div>
 
         {/* KPI: Active Categories */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</span>
-            <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
-              <Globe className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-purple-500/10 text-purple-500 flex items-center justify-center">
+              <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <span className="text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{categoriesCount.length}</span>
+          <div className="mt-3 sm:mt-4 flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{categoriesCount.length}</span>
             <span className="text-[10px] text-gray-400 font-bold">Stable</span>
           </div>
           <p className="text-[10px] text-gray-400 mt-1">Stone collection tags</p>
         </div>
 
         {/* KPI: Booking Boxes */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Booking Boxes</span>
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-              <TrendingUp className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Booking Boxes</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <span className="text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{sampleRequestsCount}</span>
+          <div className="mt-3 sm:mt-4 flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">{sampleRequestsCount}</span>
             <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-0.5">
               <ArrowUpRight className="w-3.5 h-3.5" /> +24%
             </span>
@@ -99,15 +99,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
         </div>
 
         {/* KPI: Visitors Analytics */}
-        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
+        <div className="bg-white dark:bg-[#131316] border border-gray-200 dark:border-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-md relative overflow-hidden group hover:border-[#C8A96A]/40 transition-all duration-300">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Visitors</span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-              <Users className="w-5 h-5" />
+            <span className="text-[10px] sm:text-xs font-semibold text-gray-500 uppercase tracking-wider">Visitors</span>
+            <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
           </div>
-          <div className="mt-4 flex items-baseline justify-between">
-            <span className="text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">34.2K</span>
+          <div className="mt-3 sm:mt-4 flex items-baseline justify-between">
+            <span className="text-2xl sm:text-3xl font-bold font-serif-luxury text-gray-900 dark:text-white">34.2K</span>
             <span className="text-[10px] text-emerald-500 font-bold flex items-center gap-0.5">
               <ArrowUpRight className="w-3.5 h-3.5" /> +18.4%
             </span>
@@ -128,7 +128,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({ slabs, sampleReque
             <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-full bg-blue-500"/> Visitors</span>
           </div>
         </div>
-        <div className="h-80 w-full">
+        <div className="h-56 sm:h-80 w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={REVENUE_DATA} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
               <defs>

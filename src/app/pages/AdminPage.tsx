@@ -412,8 +412,8 @@ export const AdminPage: React.FC = () => {
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         
         {/* Sticky Header */}
-        <header className="sticky top-0 bg-white/80 dark:bg-[#0A0A0C]/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800/85 z-20 px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <header className="sticky top-0 bg-white/80 dark:bg-[#0A0A0C]/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800/85 z-20 px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Mobile Sidebar menu toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -422,20 +422,21 @@ export const AdminPage: React.FC = () => {
               <Menu className="w-5 h-5" />
             </button>
 
-            <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2.5 py-1.5 rounded-xl font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-              <ShieldAlert className="w-3.5 h-3.5" /> Portal Root Admin
+            <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-2 sm:px-2.5 py-1.5 rounded-xl font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Portal Root Admin</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Keyboard Palette Button */}
             <button
               onClick={() => setShowCommandPalette(true)}
-              className="px-3 py-1.5 border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-xl text-[10px] font-bold text-gray-400 dark:text-gray-400 flex items-center gap-1.5 transition-all shadow-xs"
+              className="px-2 sm:px-3 py-1.5 border border-gray-200 dark:border-gray-800 hover:border-[#C8A96A]/60 rounded-xl text-[10px] font-bold text-gray-400 dark:text-gray-400 flex items-center gap-1.5 transition-all shadow-xs"
             >
               <Command className="w-3.5 h-3.5" />
-              <span>Search Options</span>
-              <kbd className="bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-[9px]">Ctrl+K</kbd>
+              <span className="hidden sm:inline">Search Options</span>
+              <kbd className="hidden sm:inline bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-[9px]">Ctrl+K</kbd>
             </button>
 
 
@@ -497,7 +498,7 @@ export const AdminPage: React.FC = () => {
         </header>
 
         {/* View Content Workspace */}
-        <main className="flex-1 p-6 sm:p-8 space-y-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-3 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 max-w-7xl w-full mx-auto">
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
               <DashboardView key="dashboard" slabs={slabs} sampleRequestsCount={sampleOrders.length} />
@@ -549,7 +550,7 @@ export const AdminPage: React.FC = () => {
               >
                 <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 pb-4">
                   <div>
-                    <h2 className="font-serif-luxury text-2xl font-bold text-gray-900 dark:text-white">
+                    <h2 className="font-serif-luxury text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                       {editingSlab ? 'Edit Product Details' : 'Add New Product to Atelier Catalog'}
                     </h2>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -626,22 +627,7 @@ export const AdminPage: React.FC = () => {
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
-                        In-Stock Quantity (Slabs / Boxes)
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="e.g. 50"
-                        value={formData.inStockSlabs !== undefined && formData.inStockSlabs !== null ? formData.inStockSlabs : ''}
-                        onChange={e => {
-                          const val = e.target.value;
-                          setFormData({ ...formData, inStockSlabs: val === '' ? undefined : parseInt(val) || 0 });
-                        }}
-                        className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:border-[#C8A96A] focus:outline-none"
-                      />
-                    </div>
+
 
                     <div className="space-y-2">
                       <label className="text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 font-semibold block">
@@ -701,81 +687,6 @@ export const AdminPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Specifications */}
-                  <div className="space-y-4 border-t border-gray-200 dark:border-gray-805 pt-6">
-                    <label className="text-xs uppercase tracking-wider text-[#C8A96A] font-bold block">
-                      2. Product Specifications (Technical Details)
-                    </label>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Compressive Strength</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. 210 MPa"
-                          value={formData.specifications?.compressiveStrength || ''}
-                          onChange={e => setFormData({
-                            ...formData,
-                            specifications: {
-                              ...(formData.specifications || {}),
-                              compressiveStrength: e.target.value
-                            } as any
-                          })}
-                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Water Absorption</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. < 0.08%"
-                          value={formData.specifications?.waterAbsorption || ''}
-                          onChange={e => setFormData({
-                            ...formData,
-                            specifications: {
-                              ...(formData.specifications || {}),
-                              waterAbsorption: e.target.value
-                            } as any
-                          })}
-                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Density</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. 2.50 g/cm³"
-                          value={formData.specifications?.density || ''}
-                          onChange={e => setFormData({
-                            ...formData,
-                            specifications: {
-                              ...(formData.specifications || {}),
-                              density: e.target.value
-                            } as any
-                          })}
-                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label className="text-xs uppercase tracking-wider text-gray-500 font-semibold block">Flexural Strength</label>
-                        <input
-                          type="text"
-                          placeholder="e.g. 40 MPa"
-                          value={formData.specifications?.flexuralStrength || ''}
-                          onChange={e => setFormData({
-                            ...formData,
-                            specifications: {
-                              ...(formData.specifications || {}),
-                              flexuralStrength: e.target.value
-                            } as any
-                          })}
-                          className="w-full bg-gray-50 dark:bg-[#1A1A1F] border border-gray-250 dark:border-gray-800 rounded-xl px-4 py-3 text-xs focus:border-[#C8A96A] focus:outline-none text-gray-900 dark:text-gray-100"
-                        />
-                      </div>
-                    </div>
-                  </div>
 
                   {/* Images & Details */}
                   <div className="space-y-4 border-t border-gray-200 dark:border-gray-805 pt-6">
@@ -934,16 +845,16 @@ export const AdminPage: React.FC = () => {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white dark:bg-[#111114] border border-[#C8A96A]/30 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col text-xs text-left"
+              className="bg-white dark:bg-[#111114] border border-[#C8A96A]/30 w-full max-w-lg rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative z-10 flex flex-col text-xs text-left mx-3 sm:mx-0"
             >
               <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center gap-3">
                 <Command className="w-4 h-4 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Type a dashboard view or category to navigate..."
+                  placeholder="Type a view or category..."
                   value={commandQuery}
                   onChange={e => setCommandQuery(e.target.value)}
-                  className="flex-1 bg-transparent border-none outline-none text-xs text-gray-900 dark:text-white placeholder-gray-450"
+                  className="flex-1 bg-transparent border-none outline-none text-sm sm:text-xs text-gray-900 dark:text-white placeholder-gray-450"
                   autoFocus
                 />
                 <button

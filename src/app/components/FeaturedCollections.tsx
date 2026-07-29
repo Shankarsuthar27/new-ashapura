@@ -56,9 +56,9 @@ export const FeaturedCollections: React.FC = () => {
                 />
 
                 {/* Count Badge */}
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white text-xs font-mono">
+                {/* <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white text-xs font-mono">
                   {category.count} Slabs In Stock
-                </div>
+                </div> */}
               </div>
 
               {/* Card Body */}

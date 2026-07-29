@@ -106,24 +106,9 @@ export const ProductDetailsPage: React.FC = () => {
                     <span className="text-gray-400 block">Thickness</span>
                     <span className="font-medium font-mono text-gray-900 dark:text-gray-100">{slab.thickness}</span>
                   </div>
-                  <div>
-                    <span className="text-gray-400 block">Compressive Strength</span>
-                    <span className="font-medium">{slab.specifications.compressiveStrength}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block">Water Absorption</span>
-                    <span className="font-medium">{slab.specifications.waterAbsorption}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block">Density</span>
-                    <span className="font-medium">{slab.specifications.density}</span>
-                  </div>
-                  <div>
-                    <span className="text-gray-400 block">Flexural Strength</span>
-                    <span className="font-medium">{slab.specifications.flexuralStrength}</span>
-                  </div>
                 </div>
               </div>
+
 
               {/* Surface Finish */}
               <div className="mb-6">
