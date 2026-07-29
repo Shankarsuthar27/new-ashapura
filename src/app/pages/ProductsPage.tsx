@@ -173,7 +173,7 @@ export const ProductsPage: React.FC = () => {
           {/* Header Title & Tagline */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
             
-            <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-[#0B1F44] tracking-tight mb-20">
+            <h1 className="font-serif-luxury text-4xl sm:text-5xl font-bold text-[#0B1F44] tracking-tight mb-12">
               Granite, Marble & Tile Collection
             </h1>
            
@@ -320,7 +320,7 @@ export const ProductsPage: React.FC = () => {
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 }
                 }}
-                className="group bg-white rounded-[24px] border border-gray-200 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-none hover:shadow-none"
+                className="group bg-white  border border-gray-200 hover:-translate-y-2 transition-all duration-300 overflow-hidden flex flex-col justify-between shadow-none hover:shadow-none"
               >
                 {/* Image Area with 4:3 Aspect Ratio & Hover Zoom */}
                 <div

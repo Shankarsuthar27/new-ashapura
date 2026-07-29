@@ -166,7 +166,7 @@ export const AdminPage: React.FC = () => {
     rarity: 'Signature',
     description: '',
     longDescription: '',
-    image: PRESET_IMAGES[2].url,
+    image: '',
     bookmatchImage: '',
     applications: ['Flooring', 'Bathroom Wall'],
     featured: true,
@@ -740,26 +740,6 @@ export const AdminPage: React.FC = () => {
                             {uploadError && <p className="text-[10px] text-red-500">{uploadError}</p>}
                           </div>
                         )}
-                      </div>
-
-                      {/* Preset quick selection images */}
-                      <div className="space-y-2">
-                        <label className="text-[10px] uppercase text-gray-450 font-bold block">Or Quick Select Preset Mock Asset</label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {PRESET_IMAGES.map((img, idx) => (
-                            <button
-                              key={idx}
-                              type="button"
-                              onClick={() => setFormData({ ...formData, image: img.url })}
-                              className={`flex items-center gap-2 p-2 rounded-xl border text-left text-[9px] transition-all hover:bg-gray-50 dark:hover:bg-[#1A1A1F] ${
-                                formData.image === img.url ? 'border-[#C8A96A] bg-[#C8A96A]/5' : 'border-gray-200 dark:border-gray-800'
-                              }`}
-                            >
-                              <img src={img.url} alt="" className="w-8 h-8 object-cover rounded-lg" />
-                              <span className="font-bold truncate text-gray-700 dark:text-gray-300">{img.name}</span>
-                            </button>
-                          ))}
-                        </div>
                       </div>
                     </div>
                   </div>

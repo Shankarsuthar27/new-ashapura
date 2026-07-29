@@ -118,7 +118,7 @@ export const Footer: React.FC = () => {
             </p>
 
             <div className="flex items-center space-x-3 pt-2">
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="p-2.5 rounded-full bg-[#18181C] hover:bg-[#C8A96A] hover:text-black transition-colors">
+              <a href="https://www.instagram.com/ashapura_tiles_kalandri1/" target="_blank" rel="noreferrer" className="p-2.5 rounded-full bg-[#18181C] hover:bg-[#C8A96A] hover:text-black transition-colors">
                 <Instagram className="w-4 h-4" />
               </a>
               <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="p-2.5 rounded-full bg-[#18181C] hover:bg-[#C8A96A] hover:text-black transition-colors">
