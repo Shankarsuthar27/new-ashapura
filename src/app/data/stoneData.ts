@@ -242,63 +242,56 @@ export const TESTIMONIALS_DATA: Testimonial[] = [
 export const BLOG_ARTICLES: BlogArticle[] = [
   {
     id: 'marble-trends-2026',
-    title: '2026 Luxury Marble Trends: Indian Book-Matched Veining & Premium Calacatta Gold',
+    title: '2026 Luxury Marble Trends',
     slug: '2026-luxury-marble-trends',
     category: 'Design Trends',
-    readTime: '6 min read',
+    readTime: '2 min read',
     date: 'July 18, 2026',
     author: 'Vikramaditya Sen',
     authorRole: 'Principal Curator, Ashapura Granite',
-    summary: 'Discover how top interior designers are deploying dramatic book-matched marble slabs to turn modern Indian bungalows and penthouses into monolithic stone sanctuaries.',
-    content: `Natural stone has evolved from a utilitarian countertop material into the centerpiece of luxury interior design in Indian bungalows and high-end apartments. As we progress through 2026, the preference in major cities like Mumbai, Delhi NCR, and Bangalore has shifted dramatically toward bold, sculptural stone selections with high-contrast veining.
+    summary: 'Discover how top designers use book-matched marble and warm tones to elevate modern luxury homes.',
+    content: `Natural stone is the centerpiece of modern luxury interiors. Designers are choosing bold, sculptural slabs with dramatic veining.
 
-1. The Renaissance of Book-Matching
-Book-matching involves pairing adjacent slabs cut from the exact same marble block so that their veining mirrors each other like an open book. This technique is highly favored for premium home mandirs, lobby double-height accent walls, and living room floor spreads across luxury estates in Rajasthan and Delhi.
-
-2. Warm Gold Veining Over Monochromatic Grey
-While cool grey Statuario dominated luxury Indian residential projects in the previous decade, warm honey and champagne tones—exemplified by Calacatta Gold Oro Extra—are now taking center stage, adding an organic, sun-washed warmth to premium drawing rooms.
-
-3. Sintered Ultra-Thin Porcelain Facades
-Architects are increasingly incorporating lightweight porcelain sintered slabs into outdoor terrace lounges and high-rise apartment exterior balconies in Mumbai and Bangalore for zero-fading endurance against severe tropical monsoons.`,
+1. Book-Matching: Pairing adjacent slabs cut from the same block to mirror each other creates a striking focal point for accent walls and mandirs.
+2. Warm Gold Tones: Warm champagne and honey hues are replacing cool grey marbles, adding warmth to drawing rooms.
+3. Slim Porcelain: Lightweight, weather-resistant sintered slabs are popular for outdoor balconies and high-rise facades.`,
     image: 'img1.jpeg',
     tags: ['Marble', 'Calacatta', 'Bookmatching', 'Interior Design']
   },
   {
     id: 'quartzite-vs-marble-guide',
-    title: 'Quartzite vs. Marble: Choosing the Right Exotic Stone for Your Kitchen',
+    title: 'Quartzite vs. Marble: Kitchen Guide',
     slug: 'quartzite-vs-marble-kitchen-guide',
     category: 'Material Guide',
-    readTime: '8 min read',
+    readTime: '2 min read',
     date: 'June 24, 2026',
     author: 'Shivam suthar',
     authorRole: 'Senior Petrographer & Quarry Director',
-    summary: 'Understanding the geological differences between metamorphic marble and quartzite to choose stone that balances delicate beauty with heavy culinary utility.',
-    content: `Choosing between natural marble and quartzite for a high-traffic kitchen island is one of the most critical decisions in high-end residential architectural projects.
+    summary: 'A simple geological guide to choosing the right natural stone for your kitchen countertops.',
+    content: `Choosing the right stone for a kitchen island is crucial for both aesthetics and durability.
 
-The Geology of Quartzite
-Unlike marble, which is composed primarily of calcium carbonate, quartzite originates as pure quartz sandstone that undergoes intense tectonic heat and pressure. The result is a stone rated 7 on the Mohs hardness scale—harder than steel knife blades.
-
-Acid Resistance & Etching
-Marble reacts with lemons, wine, and acidic vinegar, requiring periodic sealant maintenance. Quartzite, by contrast, is completely chemically inert to culinary acids, preserving its factory polish effortlessly.`,
+1. Geology: Quartzite is formed from sandstone under intense heat and pressure, making it much harder than marble.
+2. Acid Resistance: Unlike calcite-based marble, quartzite does not etch or react when exposed to acids like lemon juice or vinegar.`,
     image: 'img2.jpeg',
     tags: ['Quartzite', 'Kitchen Countertops', 'Material Science', 'Maintenance']
   },
   {
     id: 'stone-maintenance-masterclass',
-    title: 'The Ultimate Stone Maintenance Masterclass: Preserving Luster & Vein Depth',
+    title: 'Stone Maintenance Masterclass',
     slug: 'stone-maintenance-masterclass',
     category: 'Maintenance',
-    readTime: '5 min read',
+    readTime: '2 min read',
     date: 'May 12, 2026',
     author: 'Bhavesh soni',
     authorRole: 'Master Stone Mason',
-    summary: 'Expert techniques used by museum stone conservators to clean, seal, and polish luxury natural marble and exotic granite surfaces.',
-    content: `Proper care ensures natural marble and granite age gracefully over centuries. Here is our master stone care protocol.
+    summary: 'Expert tips on cleaning, sealing, and preserving your luxury natural marble and granite surfaces.',
+    content: `Proper care preserves the beauty of natural marble and granite for generations.
 
-1. pH-Neutral Cleaners Only : Never use ammonia, bleach, or vinegar on natural calcite marble. Always use specialized pH-neutral stone soaps.
-2. Penetrating Hydrophobic Sealers: Apply fluoropolymer sealers once every 12 to 18 months to create a microscopic barrier against oil and water stains.
-3. Prompt Spill Cleanup: Wipe up wine, coffee, or citrus drips immediately using soft microfiber cloths.`,
+1. Neutral Cleaners: Avoid acidic cleaners like vinegar. Use pH-neutral stone soaps.
+2. Sealing: Apply hydrophobic sealants every 12 to 18 months to protect against stains.
+3. Clean Spills: Wipe away acidic liquids immediately with microfibre cloths.`,
     image: 'img3.jpeg',
     tags: ['Stone Care', 'Sealing', 'Marble Maintenance']
   }
 ];
+

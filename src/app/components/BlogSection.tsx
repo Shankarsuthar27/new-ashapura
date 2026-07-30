@@ -18,7 +18,7 @@ export const BlogSection: React.FC = () => {
             Stone & Interior Journal
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-base font-sans-luxury">
-            Expert insights on stone petrography, book-matching trends, maintenance protocols, and luxury interior design ideas.
+            Expert insights on stone trends, curation, and care.
           </p>
         </div>
 
